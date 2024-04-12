@@ -23,11 +23,12 @@ def create_table():
             # Creating a cursor object using the cursor() method
             cursor = connection.cursor()
 
-            # SQL query to create a new table "grip_active"
+            # SQL query to create a new table "grip_active" with the new column "ptlastname"
             create_table_query = """
             CREATE TABLE grip_active (
                 role VARCHAR(255),
                 ptname VARCHAR(255),
+                ptlastname VARCHAR(255),
                 status VARCHAR(255)
             )
             """

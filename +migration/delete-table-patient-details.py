@@ -1,6 +1,6 @@
 import mysql.connector
 
-def insert_data(role, ptname, ptlastname, status):
+def delete_patient_details_table():
     try:
         # Database connection parameters
         host = "localhost"
@@ -23,31 +23,24 @@ def insert_data(role, ptname, ptlastname, status):
         # Creating a cursor object using the cursor() method
         cursor = connection.cursor()
 
-        # SQL query to insert data into the "grip_active" table
-        insert_query = """
-        INSERT INTO grip_active (role, ptname, ptlastname, status)
-        VALUES (%s, %s, %s, %s)
-        """
+        # SQL query to delete the "patient_details" table
+        delete_table_query = "DROP TABLE IF EXISTS patient_details"
 
-        # Data to be inserted
-        data = (role, ptname, ptlastname, status)
+        # Executing the SQL query
+        cursor.execute(delete_table_query)
 
-        # Execute the SQL query
-        cursor.execute(insert_query, data)
-
-        # Committing the changes
-        connection.commit()
-
-        print("Data inserted successfully!")
+        print("Table 'patient_details' deleted successfully!")
 
     except mysql.connector.Error as error:
-        print("Error inserting data:", error)
+        print("Error deleting table:", error)
 
     finally:
-        # Closing the connection
-        if connection.is_connected():
+        # Closing the cursor
+        if 'cursor' in locals() and cursor is not None:
             cursor.close()
+        # Closing the connection
+        if 'connection' in locals() and connection.is_connected():
             connection.close()
 
-# Example usage
-insert_data("Admin", "hello", "world", "1")
+# Delete the "patient_details" table
+delete_patient_details_table()

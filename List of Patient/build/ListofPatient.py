@@ -1,3 +1,167 @@
+import mysql.connector
+
+def update_patient_data(new_pt, new_firstname, new_lastname, id_value):
+    try:
+        # Database connection parameters
+        host = "localhost"
+        user = "root"
+        password = ""
+        database = "gripdespro"
+
+        # Establishing the connection to MySQL
+        connection = mysql.connector.connect(
+            host=host,
+            user=user,
+            password=password,
+            database=database
+        )
+
+        if not connection.is_connected():
+            print("Connection failed")
+            return
+
+        # Creating a cursor object using the cursor() method
+        cursor = connection.cursor()
+
+        # SQL query to update the data in the "patient_active" table
+        update_query = """
+        UPDATE patient_active
+        SET pt = %s, firstname = %s, lastname = %s
+        WHERE id = %s
+        """
+        # Data to be updated
+        data = (new_pt, new_firstname, new_lastname, id_value)
+
+        # Execute the SQL query
+        cursor.execute(update_query, data)
+
+        # Commit the changes
+        connection.commit()
+
+        # print("Data updated successfully")
+
+    except mysql.connector.Error as error:
+        print("Error updating data:", error)
+
+    finally:
+        # Closing the connection
+        if connection.is_connected():
+            cursor.close()
+            connection.close()
+def extract_ptname_ptlastname():
+    pt_info = []  # List to store ptname and ptlastname
+    try:
+        # Database connection parameters
+        host = "localhost"
+        user = "root"
+        password = ""
+        database = "gripdespro"
+
+        # Establishing the connection to MySQL
+        connection = mysql.connector.connect(
+            host=host,
+            user=user,
+            password=password,
+            database=database
+        )
+
+        if not connection.is_connected():
+            print("Connection failed")
+
+        else:
+            # Creating a cursor object using the cursor() method
+            cursor = connection.cursor()
+
+            # Select query to fetch ptname and ptlastname
+            select_query = "SELECT ptname, ptlastname FROM grip_active LIMIT 1"
+
+            # Execute the SQL query
+            cursor.execute(select_query)
+
+            # Fetch the first row
+            row = cursor.fetchone()
+
+            if row:
+                pt_info = list(row)
+
+    except mysql.connector.Error as error:
+        print("Error fetching data:", error)
+
+    finally:
+        # Closing the connection
+        if connection.is_connected():
+            cursor.close()
+            connection.close()
+    
+    return pt_info
+
+
+def extract_data(pt_value):
+    try:
+        # Database connection parameters
+        host = "localhost"
+        user = "root"
+        password = ""
+        database = "gripdespro"
+
+        # Establishing the connection to MySQL
+        connection = mysql.connector.connect(
+            host=host,
+            user=user,
+            password=password,
+            database=database
+        )
+
+        if not connection.is_connected():
+            print("Connection failed")
+            return
+
+        # Creating a cursor object using the cursor() method
+        cursor = connection.cursor()
+
+        # SQL query to fetch required columns from the table based on the 'pt' value
+        select_query = """
+        SELECT firstname, lastname, lastsession, status 
+        FROM patient_details 
+        WHERE pt = %s
+        """
+
+        # Executing the SQL query with the specified 'pt' value
+        cursor.execute(select_query, (pt_value,))
+
+        # Fetching all rows from the result set
+        rows = cursor.fetchall()
+
+        # Formatting the data into the desired output format
+        output_data = [[row[0], row[1], row[2] if row[2] else "", row[3] if row[3] else ""] for row in rows]
+
+        return output_data
+
+    except mysql.connector.Error as error:
+        print("Error extracting data:", error)
+
+    finally:
+        # Closing the cursor
+        if 'cursor' in locals() and cursor is not None:
+            cursor.close()
+        # Closing the connection
+        if 'connection' in locals() and connection.is_connected():
+            connection.close()
+
+
+ptname_ptlastname = extract_ptname_ptlastname()
+pt_value = ptname_ptlastname[0] + ptname_ptlastname[1]
+
+# Extract the required data
+extracted_data = extract_data(pt_value)
+
+# Print the extracted data
+mylist = []
+for row in extracted_data:
+    mylist.append(row)
+
+# print(mylist)
+
 from pathlib import Path
 import tkinter as tk
 
@@ -8,6 +172,7 @@ def relative_to_assets(path: str) -> Path:
     return ASSETS_PATH / Path(path)
 
 def main():
+    global mylist
     window = tk.Tk()
     window.geometry("900x600")
     window.geometry("+10+10")
@@ -76,34 +241,42 @@ class Table(tk.Frame):
         first_name = self.data[row - 1][0]
         last_name = self.data[row - 1][1]
         print("Clicked row:", row)
-        print("First Name:", first_name)
-        print("Last Name:", last_name)
+        # print("First Name:", first_name)
+        # print("Last Name:", last_name)
+
+        ptname_ptlastname = extract_ptname_ptlastname()
+        print(ptname_ptlastname)
+        pt_value = ptname_ptlastname[0] + ptname_ptlastname[1]
+        
+        update_patient_data(pt_value, first_name, last_name, 1)
+
         self.master.destroy()
 
     def create_table(self):
         headers = ['Firstname', 'Lastname', 'Last Session', 'Status']
-        self.data = [
-            ['John', 'Doe', 'Session 1', 'Active'],
-            ['Jane', 'Smith', 'Session 2', 'Inactive'],
-            ['Alice', 'Johnson', 'Session 3', 'Active'],
-            ['Bob', 'Williams', 'Session 4', 'Active'],
-            ['Emily', 'Brown', 'Session 5', 'Inactive'],
-            ['Michael', 'Jones', 'Session 6', 'Active'],
-            ['Emma', 'Garcia', 'Session 7', 'Inactive'],
-            ['William', 'Martinez', 'Session 8', 'Active'],
-            ['Sophia', 'Lee', 'Session 9', 'Active'],
-            ['James', 'Taylor', 'Session 10', 'Inactive'],
-            ['David', 'Miller', 'Session 11', 'Active'],
-            ['Olivia', 'Wilson', 'Session 12', 'Inactive'],
-            ['Liam', 'Moore', 'Session 13', 'Active'],
-            ['Charlotte', 'Anderson', 'Session 14', 'Active'],
-            ['Ethan', 'Thomas', 'Session 15', 'Inactive'],
-            ['Isabella', 'Jackson', 'Session 16', 'Active'],
-            ['Mason', 'White', 'Session 17', 'Inactive'],
-            ['Ava', 'Harris', 'Session 18', 'Active'],
-            ['Noah', 'Martin', 'Session 19', 'Active'],
-            ['Sophie', 'Thompson', 'Session 20', 'Inactive']
-        ]
+        self.data = mylist
+        # self.data = [
+        #     ['John', 'Doe', 'Session 1', 'Active'],
+        #     ['Jane', 'Smith', 'Session 2', 'Inactive'],
+        #     ['Alice', 'Johnson', 'Session 3', 'Active'],
+        #     ['Bob', 'Williams', 'Session 4', 'Active'],
+        #     ['Emily', 'Brown', 'Session 5', 'Inactive'],
+        #     ['Michael', 'Jones', 'Session 6', 'Active'],
+        #     ['Emma', 'Garcia', 'Session 7', 'Inactive'],
+        #     ['William', 'Martinez', 'Session 8', 'Active'],
+        #     ['Sophia', 'Lee', 'Session 9', 'Active'],
+        #     ['James', 'Taylor', 'Session 10', 'Inactive'],
+        #     ['David', 'Miller', 'Session 11', 'Active'],
+        #     ['Olivia', 'Wilson', 'Session 12', 'Inactive'],
+        #     ['Liam', 'Moore', 'Session 13', 'Active'],
+        #     ['Charlotte', 'Anderson', 'Session 14', 'Active'],
+        #     ['Ethan', 'Thomas', 'Session 15', 'Inactive'],
+        #     ['Isabella', 'Jackson', 'Session 16', 'Active'],
+        #     ['Mason', 'White', 'Session 17', 'Inactive'],
+        #     ['Ava', 'Harris', 'Session 18', 'Active'],
+        #     ['Noah', 'Martin', 'Session 19', 'Active'],
+        #     ['Sophie', 'Thompson', 'Session 20', 'Inactive']
+        # ]
 
         # Create headers
         for col, header in enumerate(headers):
