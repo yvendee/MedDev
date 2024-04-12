@@ -117,7 +117,8 @@ entry_1 = Entry(
     bd=0,
     bg="#9CE9E4",
     fg="#000716",
-    highlightthickness=0
+    highlightthickness=0,
+     show="*"
 )
 entry_1.place(
     x=132.0,
@@ -137,7 +138,8 @@ entry_2 = Entry(
     bd=0,
     bg="#9CE9E4",
     fg="#000716",
-    highlightthickness=0
+    highlightthickness=0,
+    show="*"
 )
 entry_2.place(
     x=132.0,

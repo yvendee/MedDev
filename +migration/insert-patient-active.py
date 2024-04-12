@@ -1,6 +1,6 @@
 import mysql.connector
 
-def update_record(role, ptname, ptlastname, status):
+def insert_patient_data(pt, firstname, lastname):
     try:
         # Database connection parameters
         host = "localhost"
@@ -23,21 +23,24 @@ def update_record(role, ptname, ptlastname, status):
             # Creating a cursor object using the cursor() method
             cursor = connection.cursor()
 
-            # Update query
-            update_query = """
-            UPDATE grip_active 
-            SET role=%s, ptname=%s, ptlastname=%s, status=%s
-            LIMIT 1
+            # SQL query to insert data into the "patient_active" table
+            insert_query = """
+            INSERT INTO patient_active (pt, firstname, lastname)
+            VALUES (%s, %s, %s)
             """
+            # Data to be inserted
+            data = (pt, firstname, lastname)
 
             # Execute the SQL query
-            cursor.execute(update_query, (role, ptname, ptlastname, status))
+            cursor.execute(insert_query, data)
+
+            # Commit the changes
             connection.commit()
 
-            print("Record updated successfully")
+            print("Data inserted successfully")
 
     except mysql.connector.Error as error:
-        print("Error updating record:", error)
+        print("Error inserting data:", error)
 
     finally:
         # Closing the connection
@@ -46,4 +49,4 @@ def update_record(role, ptname, ptlastname, status):
             connection.close()
 
 # Example usage
-update_record("Updated Role", "Updated Ptname", "Updated Ptlastname", "Updated Status")
+insert_patient_data("helloworldx", "john", "dee")

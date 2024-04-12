@@ -12,11 +12,11 @@ def check_string(input_string):
 
 def main():
 
-    mode = 0
-    rtn_str = ""
+    # mode = 0
+    # rtn_str = ""
 
-    # mode = 1
-    # rtn_str = "button_1 clicked"
+    mode = 1
+    rtn_str = "button_1 clicked"
 
     # Get the directory of main.py
     script_dir = os.path.dirname(os.path.abspath(__file__))
@@ -186,6 +186,7 @@ def main():
                 editTherapistDetails_process.terminate()
                 mode = 1
 
+
         if(mode == 5):
             if rtn_str == "button_2 clicked":
                 if AddPatientDetails_process.poll() is None:
@@ -194,7 +195,8 @@ def main():
                     print("AddPatientDetails_process terminated")
                 else:
                     print("AddPatientDetails_process is not running")
-                mode = 0 
+                mode = 1
+                rtn_str = "button_1 clicked"
 
         if(mode == 5):
 

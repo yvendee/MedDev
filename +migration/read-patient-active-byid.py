@@ -1,6 +1,6 @@
 import mysql.connector
 
-def insert_data(role, ptname, ptlastname, status):
+def extract_patient_data_by_id(id_value):
     try:
         # Database connection parameters
         host = "localhost"
@@ -23,25 +23,29 @@ def insert_data(role, ptname, ptlastname, status):
         # Creating a cursor object using the cursor() method
         cursor = connection.cursor()
 
-        # SQL query to insert data into the "grip_active" table
-        insert_query = """
-        INSERT INTO grip_active (role, ptname, ptlastname, status)
-        VALUES (%s, %s, %s, %s)
+        # SQL query to select data from the "patient_active" table by id
+        select_query = """
+        SELECT pt, firstname, lastname
+        FROM patient_active
+        WHERE id = %s
         """
-
-        # Data to be inserted
-        data = (role, ptname, ptlastname, status)
-
+        
         # Execute the SQL query
-        cursor.execute(insert_query, data)
-
-        # Committing the changes
-        connection.commit()
-
-        print("Data inserted successfully!")
+        cursor.execute(select_query, (id_value,))
+        
+        # Fetch the result
+        result = cursor.fetchone()
+        
+        if result:
+            # Convert the result tuple to a list of strings
+            result_list = list(map(str, result))
+            return result_list
+        else:
+            print("No data found for id =", id_value)
+            return None
 
     except mysql.connector.Error as error:
-        print("Error inserting data:", error)
+        print("Error extracting data:", error)
 
     finally:
         # Closing the connection
@@ -50,4 +54,6 @@ def insert_data(role, ptname, ptlastname, status):
             connection.close()
 
 # Example usage
-insert_data("Admin", "hello", "world", "1")
+data = extract_patient_data_by_id(1)
+if data:
+    print(data)  # Output: ["pt", "firstname", "lastname"]

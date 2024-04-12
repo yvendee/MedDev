@@ -1,6 +1,6 @@
 import mysql.connector
 
-def update_record(role, ptname, ptlastname, status):
+def delete_patient_active_table():
     try:
         # Database connection parameters
         host = "localhost"
@@ -23,21 +23,16 @@ def update_record(role, ptname, ptlastname, status):
             # Creating a cursor object using the cursor() method
             cursor = connection.cursor()
 
-            # Update query
-            update_query = """
-            UPDATE grip_active 
-            SET role=%s, ptname=%s, ptlastname=%s, status=%s
-            LIMIT 1
-            """
+            # SQL query to delete the "patient_active" table
+            delete_query = "DROP TABLE IF EXISTS patient_active"
 
             # Execute the SQL query
-            cursor.execute(update_query, (role, ptname, ptlastname, status))
-            connection.commit()
+            cursor.execute(delete_query)
 
-            print("Record updated successfully")
+            print("Table 'patient_active' deleted successfully")
 
     except mysql.connector.Error as error:
-        print("Error updating record:", error)
+        print("Error deleting table:", error)
 
     finally:
         # Closing the connection
@@ -45,5 +40,5 @@ def update_record(role, ptname, ptlastname, status):
             cursor.close()
             connection.close()
 
-# Example usage
-update_record("Updated Role", "Updated Ptname", "Updated Ptlastname", "Updated Status")
+# Call the function to delete the table
+delete_patient_active_table()
