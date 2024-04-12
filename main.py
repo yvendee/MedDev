@@ -12,11 +12,11 @@ def check_string(input_string):
 
 def main():
 
-    # mode = 0
-    # rtn_str = ""
+    mode = 0
+    rtn_str = ""
 
-    mode = 1
-    rtn_str = "button_1 clicked"
+    # mode = 1
+    # rtn_str = "button_1 clicked"
 
     # Get the directory of main.py
     script_dir = os.path.dirname(os.path.abspath(__file__))
