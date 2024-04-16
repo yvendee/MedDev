@@ -8,7 +8,9 @@ https://www.python.org/downloads/
 ```
 https://www.apachefriends.org/download.html
 ```
-## 3.) run the databases:
+## 3.) import and run the mysql server:
+
+## 3.) locate working dir:
 
 ```
 cd /grip-despro
@@ -18,3 +20,8 @@ cd /grip-despro
 ```
 python main.py
 ```
+
+# You can you this sample account:
+firstname: hello
+lastname: world
+password: test
