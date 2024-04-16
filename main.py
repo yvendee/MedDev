@@ -27,7 +27,6 @@ def main():
 
             login_path = os.path.join(script_dir, "Log In", "build", "log.py")
 
-
             login_process = subprocess.Popen(["python", login_path], stdout=subprocess.PIPE, universal_newlines=True)
 
             rtn_str = ""
@@ -35,13 +34,13 @@ def main():
                 print("Stdout from log.py:", line.strip())
                 if line.strip():  # If stdout is not empty
                     rtn_str = line.strip()
+                    login_process.terminate()
                     mode = 1
                     break  # Exit loop
 
         if(mode == 1):
  
             if rtn_str == "button_2 clicked":
-                # login_process.terminate()
 
                 signin_path = os.path.join(script_dir, "Sign In", "build", "sign.py")
                 signin_process = subprocess.Popen(["python", signin_path], stdout=subprocess.PIPE, universal_newlines=True) ## 
@@ -52,12 +51,12 @@ def main():
                     if line.strip():  # If stdout is not empty
                         rtn_str = line.strip()
                         mode = 0
+                        signin_process.terminate()
                         break  # Exit loop
 
         if(mode == 1):
 
             if rtn_str == "button_1 clicked":
-                # login_process.terminate()
 
                 mainFrame_path = os.path.join(script_dir, "Main Frame", "build", "mainFrame.py")
                 mainFrame_process = subprocess.Popen(["python", mainFrame_path], stdout=subprocess.PIPE, universal_newlines=True) ## 
@@ -115,6 +114,22 @@ def main():
                         mode = 4
                         break  # Exit loop
 
+        if(mode == 2):
+
+            if rtn_str == "button_3 clicked":
+
+                if mainFrame_process.poll() is None:
+                    # If it's running, terminate it
+                    mainFrame_process.terminate()
+                    print("mainFrame_process terminated")
+                else:
+                    print("mainFrame_process is not running")
+
+
+                mode  = 0
+                rtn_str = ""
+
+
         if(mode == 3):
 
             if rtn_str == "button_2 clicked":
@@ -136,7 +151,8 @@ def main():
             ## cwhen user click "search"
             if rtn_str == "button_1 clicked":
                 ListofPatient_process.terminate() 
-                mode = 5
+                mode = 0
+                rtn_str = ""
 
                 # AddPatientDetails_path = os.path.join(script_dir, "Add Patient Details", "build", "AddPatientDetails.py")
                 # AddPatientDetails_process = subprocess.Popen(["python", AddPatientDetails_path], stdout=subprocess.PIPE, universal_newlines=True) ## 
@@ -148,6 +164,14 @@ def main():
                 #         rtn_str = line.strip()
                 #         mode = 0
                 #         break  # Exit loop
+
+        if(mode == 3):
+
+            ## cwhen user click "search"
+            if rtn_str == "button_3 clicked":
+                ListofPatient_process.terminate()
+                rtn_str = "button_1 clicked"
+                mode = 1
 
 
         if(mode == 3):
@@ -242,7 +266,7 @@ def main():
                     print("Stdout from ArchivedSession.py:", line.strip())
                     if line.strip():  # If stdout is not empty
                         rtn_str = line.strip()
-                        mode = 7
+                        mode = 8
                         break  # Exit loop
 
         if(mode == 6):
@@ -349,13 +373,41 @@ def main():
                             mode = 3
                             rtn_str = "Clicked row"
                         if rtn_str == "button_9 clicked":
-                            rtn_str = "button_1 clicked"
-                            mode = 1
+                            # rtn_str = "button_1 clicked"
+                            # mode = 0
+                            mode = 7
                             
                         break  # Exit loop
 
 
         if(mode == 7):
+            mode = 3
+            rtn_str = "Clicked row"
+
+        if(mode == 8):
+            if(check_string(rtn_str)):
+                if ArchivedSession_process.poll() is None:
+                    # If it's running, terminate it
+                    ArchivedSession_process.terminate()
+                    print("ArchivedSession_process terminated")
+                else:
+                    print("ArchivedSession_process is not running")
+
+
+                PatientData_path = os.path.join(script_dir, "Patient Data", "build", "PatientData.py")
+                PatientData_process = subprocess.Popen(["python", PatientData_path], stdout=subprocess.PIPE, universal_newlines=True) ## 
+                
+                rtn_str = ""
+                for line in PatientData_process.stdout:                            
+                    print("Stdout from PatientData.py:", line.strip())
+                    if line.strip():  # If stdout is not empty
+                        rtn_str = line.strip()
+                        mode = 6
+                        break  # Exit loop
+
+
+
+        if(mode == 9):
             sys.exit()
 
 

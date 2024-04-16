@@ -1,6 +1,563 @@
 
 import mysql.connector
 
+from tkinter import messagebox
+
+import datetime
+
+import re
+
+
+
+def get_latest_session_details(pt, firstname, lastname):
+    try:
+        # Database connection parameters
+        host = "localhost"
+        user = "root"
+        password = ""
+        database = "gripdespro"
+
+        # Establishing the connection to MySQL
+        connection = mysql.connector.connect(
+            host=host,
+            user=user,
+            password=password,
+            database=database
+        )
+
+        if not connection.is_connected():
+            print("Connection failed")
+            return
+
+        # Creating a cursor object using the cursor() method
+        cursor = connection.cursor()
+
+        # Query to retrieve the latest session number for the given pt, firstname, and lastname
+        latest_session_query = f"""
+        SELECT session_number
+        FROM session_details
+        WHERE pt = '{pt}'
+        AND firstname = '{firstname}'
+        AND lastname = '{lastname}'
+        ORDER BY session_number DESC
+        LIMIT 1
+        """
+
+        # Executing the SQL query
+        cursor.execute(latest_session_query)
+
+        # Fetch the latest session number
+        latest_session_number = cursor.fetchone()
+
+        return latest_session_number[0] if latest_session_number else None
+
+    except mysql.connector.Error as error:
+        print("Error:", error)
+
+    finally:
+        # Closing the cursor
+        if cursor:
+            cursor.close()
+        # Closing the connection
+        if connection.is_connected():
+            connection.close()
+
+def insert_mockup_data(pt, firstname, lastname, session_number, l1, l2, l3, l4, l5, r1, r2, r3, r4, r5, date):
+    try:
+        # Database connection parameters
+        host = "localhost"
+        user = "root"
+        password = ""
+        database = "gripdespro"
+
+        # Establishing the connection to MySQL
+        connection = mysql.connector.connect(
+            host=host,
+            user=user,
+            password=password,
+            database=database
+        )
+
+        if not connection.is_connected():
+            print("Connection failed")
+            return
+
+        # Creating a cursor object using the cursor() method
+        cursor = connection.cursor()
+
+        # SQL query to insert mockup data into the session_details table
+        insert_query = """
+        INSERT INTO session_details (pt, firstname, lastname, session_number, l1, l2, l3, l4, l5, r1, r2, r3, r4, r5, date)
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+        """
+
+        # Executing the SQL query
+        cursor.execute(insert_query, (pt, firstname, lastname, session_number, l1, l2, l3, l4, l5, r1, r2, r3, r4, r5, date))
+
+        # Committing the changes to the database
+        connection.commit()
+
+        print("Mockup data inserted successfully!")
+
+    except mysql.connector.Error as error:
+        print("Error inserting mockup data:", error)
+
+    finally:
+        # Closing the cursor
+        if 'cursor' in locals() and cursor is not None:
+            cursor.close()
+        # Closing the connection
+        if 'connection' in locals() and connection.is_connected():
+            connection.close()
+
+def insert_archive_session_data(pt, firstname, lastname, date, hand, f1, f2, f3, f4, f5):
+    try:
+        # Database connection parameters
+        host = "localhost"
+        user = "root"
+        password = ""
+        database = "gripdespro"
+
+        # Establishing the connection to MySQL
+        connection = mysql.connector.connect(
+            host=host,
+            user=user,
+            password=password,
+            database=database
+        )
+
+        if not connection.is_connected():
+            print("Connection failed")
+            return
+
+        # Creating a cursor object using the cursor() method
+        cursor = connection.cursor()
+
+        # SQL query to insert data into the "archive_session" table
+        insert_query = """
+        INSERT INTO archive_session (pt, firstname, lastname, date, hand, f1, f2, f3, f4, f5) 
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+        """
+
+        # Data to be inserted
+        data = (pt, firstname, lastname, date, hand, f1, f2, f3, f4, f5)
+
+        # Executing the SQL query
+        cursor.execute(insert_query, data)
+
+        # Committing the changes to the database
+        connection.commit()
+
+        # print("Data inserted successfully!")
+
+    except mysql.connector.Error as error:
+        print("Error inserting data:", error)
+
+    finally:
+        # Closing the cursor
+        if 'cursor' in locals() and cursor is not None:
+            cursor.close()
+        # Closing the connection
+        if 'connection' in locals() and connection.is_connected():
+            connection.close()
+
+def update_totalsession(pt, firstname, lastname, new_total_session):
+    try:
+        # Database connection parameters
+        host = "localhost"
+        user = "root"
+        password = ""
+        database = "gripdespro"
+
+        # Establishing the connection to MySQL
+        connection = mysql.connector.connect(
+            host=host,
+            user=user,
+            password=password,
+            database=database
+        )
+
+        if not connection.is_connected():
+            print("Connection failed")
+            return
+
+        # Creating a cursor object using the cursor() method
+        cursor = connection.cursor()
+
+        # SQL query to update the "totalsession" column based on "pt", "firstname", and "lastname"
+        update_query = """
+        UPDATE patient_details 
+        SET totalsession = %s 
+        WHERE pt = %s AND firstname = %s AND lastname = %s
+        """
+
+        # Data to be updated
+        data = (new_total_session, pt, firstname, lastname)
+
+        # Executing the SQL query
+        cursor.execute(update_query, data)
+
+        # Committing the changes to the database
+        connection.commit()
+
+        # print("Total session updated successfully!")
+
+    except mysql.connector.Error as error:
+        print("Error updating total session:", error)
+
+    finally:
+        # Closing the cursor
+        if 'cursor' in locals() and cursor is not None:
+            cursor.close()
+        # Closing the connection
+        if 'connection' in locals() and connection.is_connected():
+            connection.close()
+
+def count_entries(pt, firstname, lastname):
+    try:
+        # Database connection parameters
+        host = "localhost"
+        user = "root"
+        password = ""
+        database = "gripdespro"
+
+        # Establishing the connection to MySQL
+        connection = mysql.connector.connect(
+            host=host,
+            user=user,
+            password=password,
+            database=database
+        )
+
+        if not connection.is_connected():
+            print("Connection failed")
+            return "Connection failed"
+
+        # Creating a cursor object using the cursor() method
+        cursor = connection.cursor()
+
+        # SQL query to count the entries based on "pt", "firstname", and "lastname"
+        count_query = """
+        SELECT COUNT(*) 
+        FROM archive_session 
+        WHERE pt = %s AND firstname = %s AND lastname = %s
+        """
+
+        # Data for the query
+        data = (pt, firstname, lastname)
+
+        # Executing the SQL query
+        cursor.execute(count_query, data)
+
+        # Fetching the count result
+        count_result = cursor.fetchone()[0]
+
+        return count_result
+
+    except mysql.connector.Error as error:
+        return f"Error counting entries: {error}"
+
+    finally:
+        # Closing the cursor
+        if 'cursor' in locals() and cursor is not None:
+            cursor.close()
+        # Closing the connection
+        if 'connection' in locals() and connection.is_connected():
+            connection.close()
+
+def extract_patient_data_by_id(id_value):
+    try:
+        # Database connection parameters
+        host = "localhost"
+        user = "root"
+        password = ""
+        database = "gripdespro"
+
+        # Establishing the connection to MySQL
+        connection = mysql.connector.connect(
+            host=host,
+            user=user,
+            password=password,
+            database=database
+        )
+
+        if not connection.is_connected():
+            print("Connection failed")
+            return
+
+        # Creating a cursor object using the cursor() method
+        cursor = connection.cursor()
+
+        # SQL query to select data from the "patient_active" table by id
+        select_query = """
+        SELECT pt, firstname, lastname
+        FROM patient_active
+        WHERE id = %s
+        """
+        
+        # Execute the SQL query
+        cursor.execute(select_query, (id_value,))
+        
+        # Fetch the result
+        result = cursor.fetchone()
+        
+        if result:
+            # Convert the result tuple to a list of strings
+            result_list = list(map(str, result))
+            return result_list
+        else:
+            print("No data found for id =", id_value)
+            return None
+
+    except mysql.connector.Error as error:
+        print("Error extracting data:", error)
+
+    finally:
+        # Closing the connection
+        if connection.is_connected():
+            cursor.close()
+            connection.close()
+
+def update_status(pt, firstname, lastname, status):
+    try:
+        # Database connection parameters
+        host = "localhost"
+        user = "root"
+        password = ""
+        database = "gripdespro"
+
+        # Establishing the connection to MySQL
+        connection = mysql.connector.connect(
+            host=host,
+            user=user,
+            password=password,
+            database=database
+        )
+
+        if not connection.is_connected():
+            print("Connection failed")
+            return
+
+        # Creating a cursor object using the cursor() method
+        cursor = connection.cursor()
+
+        # SQL query to update the "status" column based on "pt", "firstname", and "lastname"
+        update_query = """
+        UPDATE patient_details 
+        SET status = %s 
+        WHERE pt = %s AND firstname = %s AND lastname = %s
+        """
+
+        # Data to be updated
+        data = (status, pt, firstname, lastname)
+
+        # Executing the SQL query
+        cursor.execute(update_query, data)
+
+        # Committing the changes to the database
+        connection.commit()
+
+        # print("Status updated successfully!")
+
+    except mysql.connector.Error as error:
+        print("Error updating status:", error)
+
+    finally:
+        # Closing the cursor
+        if 'cursor' in locals() and cursor is not None:
+            cursor.close()
+        # Closing the connection
+        if 'connection' in locals() and connection.is_connected():
+            connection.close()
+
+def update_last_session(pt, firstname, lastname, lastsession):
+    try:
+        # Database connection parameters
+        host = "localhost"
+        user = "root"
+        password = ""
+        database = "gripdespro"
+
+        # Establishing the connection to MySQL
+        connection = mysql.connector.connect(
+            host=host,
+            user=user,
+            password=password,
+            database=database
+        )
+
+        if not connection.is_connected():
+            print("Connection failed")
+            return
+
+        # Creating a cursor object using the cursor() method
+        cursor = connection.cursor()
+
+        # SQL query to update the "lastsession" column based on "pt", "firstname", and "lastname"
+        update_query = """
+        UPDATE patient_details 
+        SET lastsession = %s 
+        WHERE pt = %s AND firstname = %s AND lastname = %s
+        """
+
+        # Data to be updated
+        data = (lastsession, pt, firstname, lastname)
+
+        # Executing the SQL query
+        cursor.execute(update_query, data)
+
+        # Committing the changes to the database
+        connection.commit()
+
+        # print("Last session updated successfully!")
+
+    except mysql.connector.Error as error:
+        print("Error updating last session:", error)
+
+    finally:
+        # Closing the cursor
+        if 'cursor' in locals() and cursor is not None:
+            cursor.close()
+        # Closing the connection
+        if 'connection' in locals() and connection.is_connected():
+            connection.close()
+
+def show_error_dialog(msg):
+    messagebox.showerror("Error", msg)
+
+def show_success_dialog(msg):
+    messagebox.showinfo("Success", msg)
+
+
+mode = "left"
+
+# leftlist =  ["0","0","0","0","0"]
+# rightlist = ["0","0","0","0","0"]
+
+leftlist =  ["1","2","3","4","5"]
+rightlist = ["6","7","8","9","10"]
+
+# leftlist =  ["10","20","30","40","50"]
+# rightlist = ["60","70","80","90","10"]
+
+def sendmsg(cmd_str):
+    global mode, rightlist, leftlist
+
+    if(mode == "left"):
+
+        if(cmd_str == "thumbPress"):
+            leftlist[0] = "100"
+        if(cmd_str == "pointerPress"):
+            leftlist[1] = "100"
+        if(cmd_str == "middlePress"):
+            leftlist[2] = "100"
+        if(cmd_str == "ringPress"):
+            leftlist[3] = "100"
+        if(cmd_str == "pinkyPress"):
+            leftlist[4] = "100"
+
+    if(mode == "right"):
+
+        if(cmd_str == "thumbPress"):
+            rightlist[0] = "100"
+        if(cmd_str == "pointerPress"):
+            rightlist[1] = "100"
+        if(cmd_str == "middlePress"):
+            rightlist[2] = "100"
+        if(cmd_str == "ringPress"):
+            rightlist[3] = "100"
+        if(cmd_str == "pinkyPress"):
+            rightlist[4] = "100"
+
+    # print(cmd_str)
+    # print("left:",leftlist)
+    # print("right",rightlist)
+
+
+def backtomenu():
+
+    window.destroy()
+
+
+
+
+
+def confirm():
+    global mode
+
+    # Get the current date
+    current_date = datetime.datetime.now().strftime("%Y-%m-%d")
+    data = extract_patient_data_by_id(1)
+    # if data:
+    #     print(data)  # Output: ["pt", "firstname", "lastname"]
+
+    uppercase_string = mode[0].upper() + mode[1:]
+
+    f1 = "10"
+    f2 = "20"
+    f3 = "30"
+    f4 = "40"
+    f5 = "50"
+
+    # Insert data into the "archive_session" table
+    # insert_archive_session_data(pt, firstname, lastname, date, hand, f1, f2, f3, f4, f5)
+    insert_archive_session_data(data[0], data[1], data[2], current_date, uppercase_string, f1, f2, f3, f4, f5)
+
+
+    # Update the "lastsession" column in the "patient_details" table
+    update_last_session(data[0], data[1], data[2], current_date)
+
+    update_status(data[0], data[1], data[2], "Active")
+
+    scount = count_entries(edata[0], edata[1], edata[2])
+
+
+    update_totalsession(data[0], data[1], data[2], scount)
+
+    show_success_dialog("Success")
+
+
+    ###############################################################################
+
+    # Get the current date
+    current_date = datetime.datetime.now().strftime("%Y-%m-%d")
+    data = extract_patient_data_by_id(1)
+
+    # Get the latest session number for the given pt, firstname, and lastname
+    latest_session_number = get_latest_session_details(data[0], data[1], data[2])
+
+    # print("Latest Session Number:", latest_session_number)
+
+    if(latest_session_number == None):
+        # print("not found!")
+        current_date = datetime.datetime.now().strftime("%Y-%m-%d")
+        # Example usage: Insert mockup data into the session_details table
+        insert_mockup_data(data[0], data[1], data[2], "Session1", leftlist[0], leftlist[1], leftlist[2], leftlist[3], leftlist[4], rightlist[0], rightlist[1], rightlist[2], rightlist[3], rightlist[4], current_date)
+
+    else:
+
+        # Regular expression pattern to separate letters and numbers
+        pattern = r'([A-Za-z]+)(\d+)'
+
+        # Find the match of letters and numbers in the string
+        matches = re.match(pattern, latest_session_number)
+
+        if matches:
+            # Extract letters and numbers from the match
+            letters = matches.group(1)
+            numbers = matches.group(2)
+            
+            # # Print the letters and numbers found
+            # print("Letters:", letters)
+            # print("Numbers:", numbers)
+            new_num = int(numbers) + 1
+            session_str = "Session" + str(new_num)
+
+            insert_mockup_data(data[0], data[1], data[2], session_str, leftlist[0], leftlist[1], leftlist[2], leftlist[3], leftlist[4], rightlist[0], rightlist[1], rightlist[2], rightlist[3], rightlist[4], current_date)
+    
+    # window.destroy()
+
+
 def extract_columns_from_patient_details(pt, firstname, lastname):
     try:
         # Database connection parameters
@@ -120,7 +677,6 @@ result = extract_columns_from_patient_details(edata[0], edata[1], edata[2])
 # print(result) # age, startoftherapy, totalsession, physician
 
 
-
 # This file was generated by the Tkinter Designer by Parth Jadhav
 # https://github.com/ParthJadhav/Tkinter-Designer
 
@@ -152,16 +708,22 @@ def change_button(button, new_image):
         
         
 def leftPress():
+    global mode
     # Change button image to a new image
     change_button(left, leftpress)
     change_button(right, right_btn_image)
+    # print("leftPress")
+    mode = "left"
 
 leftpress = PhotoImage(file=relative_to_assets("leftpress.png"))
 
 def rightPress():
+    global mode
     # Change button image to a new image
     change_button(right, rightpress)
     change_button(left, left_btn_image)
+    # print("rightPress")
+    mode = "right"
 
 rightpress = PhotoImage(file=relative_to_assets("rightpress.png"))
 
@@ -172,6 +734,7 @@ def thumbPress():
     change_button(pinky, pinky_btn_image)
     change_button(middle, middle_btn_image)
     change_button(ring, ring_btn_image)
+    sendmsg("thumbPress")
 
 thumbpress = PhotoImage(file=relative_to_assets("thumbpress.png"))
 
@@ -182,6 +745,7 @@ def pointerPress():
     change_button(pinky, pinky_btn_image)
     change_button(middle, middle_btn_image)
     change_button(ring, ring_btn_image)
+    sendmsg("pointerPress")
  
 pointerpress = PhotoImage(file=relative_to_assets("pointerpress.png"))
 
@@ -192,6 +756,7 @@ def middlePress():
     change_button(pinky, pinky_btn_image)
     change_button(pointer, pointer_btn_image)
     change_button(ring, ring_btn_image)
+    sendmsg("middlePress")
 
 middlepress = PhotoImage(file=relative_to_assets("middlepress.png"))
 
@@ -202,6 +767,7 @@ def ringPress():
     change_button(pinky, pinky_btn_image)
     change_button(pointer, pointer_btn_image)
     change_button(middle, middle_btn_image)
+    sendmsg("ringPress")
 
 ringpress = PhotoImage(file=relative_to_assets("ringpress.png"))
 
@@ -212,6 +778,7 @@ def pinkyPress():
     change_button(pointer, pointer_btn_image)
     change_button(middle, middle_btn_image)
     change_button(ring, ring_btn_image)
+    sendmsg("pinkyPress")
 
 pinkypress = PhotoImage(file=relative_to_assets("pinkypress.png"))
 
@@ -372,7 +939,8 @@ button_8 = Button(
     image=button_image_8,
     borderwidth=0,
     highlightthickness=0,
-    command=lambda: [print("button_8 clicked"), window.destroy()],
+    # command=lambda: [print("button_8 clicked"), window.destroy()],
+    command=lambda: [print("button_8 clicked"), confirm()], ## confimr
     relief="flat"
 )
 button_8.place(
@@ -388,7 +956,7 @@ button_9 = Button(
     image=button_image_9,
     borderwidth=0,
     highlightthickness=0,
-    command=lambda: [print("button_9 clicked"), window.destroy()],
+    command=lambda: [print("button_9 clicked"), backtomenu()], ## back to main menu
     relief="flat"
 )
 button_9.place(
@@ -456,7 +1024,7 @@ canvas.create_text(
     54.0,
     369.0,
     anchor="nw",
-    text=result[3],
+    text=edata[0],
     fill="#FFFFFF",
     font=("Inter Bold", 15 * -1)
 )

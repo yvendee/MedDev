@@ -1,6 +1,7 @@
 import mysql.connector
+import datetime
 
-def insert_mockup_data(pt, firstname, lastname, session_number, l1, l2, l3, l4, l5, r1, r2, r3, r4, r5):
+def insert_mockup_data(pt, firstname, lastname, session_number, l1, l2, l3, l4, l5, r1, r2, r3, r4, r5, date):
     try:
         # Database connection parameters
         host = "localhost"
@@ -25,12 +26,12 @@ def insert_mockup_data(pt, firstname, lastname, session_number, l1, l2, l3, l4, 
 
         # SQL query to insert mockup data into the session_details table
         insert_query = """
-        INSERT INTO session_details (pt, firstname, lastname, session_number, l1, l2, l3, l4, l5, r1, r2, r3, r4, r5)
-        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+        INSERT INTO session_details (pt, firstname, lastname, session_number, l1, l2, l3, l4, l5, r1, r2, r3, r4, r5, date)
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
         """
 
         # Executing the SQL query
-        cursor.execute(insert_query, (pt, firstname, lastname, session_number, l1, l2, l3, l4, l5, r1, r2, r3, r4, r5))
+        cursor.execute(insert_query, (pt, firstname, lastname, session_number, l1, l2, l3, l4, l5, r1, r2, r3, r4, r5, date))
 
         # Committing the changes to the database
         connection.commit()
@@ -48,5 +49,8 @@ def insert_mockup_data(pt, firstname, lastname, session_number, l1, l2, l3, l4, 
         if 'connection' in locals() and connection.is_connected():
             connection.close()
 
+# Get the current date
+current_date = datetime.datetime.now().strftime("%Y-%m-%d")
+
 # Example usage: Insert mockup data into the session_details table
-insert_mockup_data("helloworld", "john", "dee", "Session1", "5", "10", "15", "20", "25", "30", "35", "40", "50", "60")
+insert_mockup_data("helloworld", "sarah", "dee", "Session1", "50", "10", "15", "20", "25", "30", "35", "40", "50", "60", current_date)

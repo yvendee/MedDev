@@ -1,5 +1,116 @@
 import mysql.connector
 
+
+import mysql.connector
+
+def get_current_session_by_id(id):
+    try:
+        # Database connection parameters
+        host = "localhost"
+        user = "root"
+        password = ""
+        database = "gripdespro"
+
+        # Establishing the connection to MySQL
+        connection = mysql.connector.connect(
+            host=host,
+            user=user,
+            password=password,
+            database=database
+        )
+
+        if not connection.is_connected():
+            print("Connection failed")
+            return
+
+        # Creating a cursor object using the cursor() method
+        cursor = connection.cursor()
+
+        # SQL query to select the "current_session" value by id
+        select_query = """
+        SELECT current_session
+        FROM session_active
+        WHERE id = %s
+        """
+
+        # Executing the SQL query with parameter
+        cursor.execute(select_query, (id,))
+
+        # Fetching the result
+        result = cursor.fetchone()
+
+        if result:
+            current_session = result[0]
+            return current_session
+            # print("Current session value:", current_session)
+        else:
+            print("No data found for id:", id)
+
+    except mysql.connector.Error as error:
+        print("Error fetching data:", error)
+
+    finally:
+        # Closing the cursor
+        if 'cursor' in locals() and cursor is not None:
+            cursor.close()
+        # Closing the connection
+        if 'connection' in locals() and connection.is_connected():
+            connection.close()
+
+def get_latest_session_details(pt, firstname, lastname):
+    try:
+        # Database connection parameters
+        host = "localhost"
+        user = "root"
+        password = ""
+        database = "gripdespro"
+
+        # Establishing the connection to MySQL
+        connection = mysql.connector.connect(
+            host=host,
+            user=user,
+            password=password,
+            database=database
+        )
+
+        if not connection.is_connected():
+            print("Connection failed")
+            return
+
+        # Creating a cursor object using the cursor() method
+        cursor = connection.cursor()
+
+        # Query to retrieve the latest session number for the given pt, firstname, and lastname
+        latest_session_query = f"""
+        SELECT session_number
+        FROM session_details
+        WHERE pt = '{pt}'
+        AND firstname = '{firstname}'
+        AND lastname = '{lastname}'
+        ORDER BY session_number DESC
+        LIMIT 1
+        """
+
+        # Executing the SQL query
+        cursor.execute(latest_session_query)
+
+        # Fetch the latest session number
+        latest_session_number = cursor.fetchone()
+
+        return latest_session_number[0] if latest_session_number else None
+
+    except mysql.connector.Error as error:
+        print("Error:", error)
+
+    finally:
+        # Closing the cursor
+        if cursor:
+            cursor.close()
+        # Closing the connection
+        if connection.is_connected():
+            connection.close()
+
+
 def extract_columns_from_patient_details(pt, firstname, lastname):
     try:
         # Database connection parameters
@@ -167,16 +278,85 @@ def read_session_data(pt, firstname, lastname, session_number):
 
 
 
+
 edata = extract_patient_data_by_id(1)
 # print(edata)
 # if data:
 #     print(data)  # Output: ["pt", "firstname", "lastname"]
 
-# Example usage:
-result = extract_columns_from_patient_details(edata[0], edata[1], edata[2])
-# print(result) # age, startoftherapy, totalsession, physician
+import mysql.connector
 
-session_str = "Session1"
+def get_current_session_by_id(id):
+    try:
+        # Database connection parameters
+        host = "localhost"
+        user = "root"
+        password = ""
+        database = "gripdespro"
+
+        # Establishing the connection to MySQL
+        connection = mysql.connector.connect(
+            host=host,
+            user=user,
+            password=password,
+            database=database
+        )
+
+        if not connection.is_connected():
+            print("Connection failed")
+            return
+
+        # Creating a cursor object using the cursor() method
+        cursor = connection.cursor()
+
+        # SQL query to select the "current_session" value by id
+        select_query = """
+        SELECT current_session
+        FROM session_active
+        WHERE id = %s
+        """
+
+        # Executing the SQL query with parameter
+        cursor.execute(select_query, (id,))
+
+        # Fetching the result
+        result = cursor.fetchone()
+
+        if result:
+            current_session = result[0]
+            # print("Current session value:", current_session)
+            return current_session
+        else:
+            print("No data found for id:", id)
+
+    except mysql.connector.Error as error:
+        print("Error fetching data:", error)
+
+    finally:
+        # Closing the cursor
+        if 'cursor' in locals() and cursor is not None:
+            cursor.close()
+        # Closing the connection
+        if 'connection' in locals() and connection.is_connected():
+            connection.close()
+
+# Example usage:
+rtn = get_current_session_by_id(1)
+
+# print(rtn)
+
+# latest_session_number = get_latest_session_details(edata[0], edata[1], edata[2])
+# print(latest_session_number)
+
+# print(edata)
+
+# # Example usage:
+result = extract_columns_from_patient_details(edata[0], edata[1], edata[2])
+# # print(result) # age, startoftherapy, totalsession, physician
+
+session_str = get_current_session_by_id(1)
+
+# session_str = latest_session_number
 
 # Example usage: Read session data and extract required fields
 session_data = read_session_data(edata[0], edata[1], edata[2], session_str)
@@ -288,7 +468,7 @@ canvas.create_text(
     63.0,
     407.0,
     anchor="nw",
-    text=result[3],
+    text=edata[0],
     fill="#FFFFFF",
     font=("Inter Bold", 15 * -1)
 )
