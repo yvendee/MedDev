@@ -1,5 +1,25 @@
 import mysql.connector
 
+from tkinter import messagebox
+
+def show_error_dialog(msg):
+    messagebox.showerror("Error", msg)
+
+def show_success_dialog(msg):
+    messagebox.showinfo("Success", msg)
+
+def check_duplicate(firstname, lastname, cursor):
+    # SQL query to check if the firstname and lastname combination exists in the table
+    query = """
+    SELECT COUNT(*) FROM grip_signup WHERE firstname = %s AND lastname = %s
+    """
+    # Execute the SQL query with the provided data
+    cursor.execute(query, (firstname, lastname))
+    # Fetch the result
+    result = cursor.fetchone()
+    # Return True if the combination already exists, False otherwise
+    return result[0] > 0
+
 def insert_data(firstname, lastname, password):
     try:
         # Establishing the connection to MySQL
@@ -13,22 +33,27 @@ def insert_data(firstname, lastname, password):
         # Creating a cursor object using the cursor() method
         cursor = connection.cursor()
 
-        # SQL query to insert data into the "grip_signup" table
-        insert_query = """
-        INSERT INTO grip_signup (firstname, lastname, password) 
-        VALUES (%s, %s, %s)
-        """
-        
-        # Data to be inserted
-        data = (firstname, lastname, password)
+        # Check if the firstname and lastname combination already exists
+        if check_duplicate(firstname, lastname, cursor):
+            # print("Error: Duplicate entry detected. This entry already exists in the database.")
+            show_error_dialog("Error: Duplicate entry detected. This entry already exists in the database.")
+        else:
+            # SQL query to insert data into the "grip_signup" table
+            insert_query = """
+            INSERT INTO grip_signup (firstname, lastname, password) 
+            VALUES (%s, %s, %s)
+            """
 
-        # Execute the SQL query
-        cursor.execute(insert_query, data)
+            # Data to be inserted
+            data = (firstname, lastname, password)
 
-        # Committing the changes
-        connection.commit()
+            # Execute the SQL query
+            cursor.execute(insert_query, data)
 
-        print("Data inserted successfully!")
+            # Committing the changes
+            connection.commit()
+
+            # print("Data inserted successfully!")
 
     except mysql.connector.Error as error:
         print(f"Error: {error}")
@@ -40,12 +65,12 @@ def insert_data(firstname, lastname, password):
             connection.close()
 
 
+
 def insert_signup():
     value = entry_1.get()
     # print("Current value of entry_1:", value)
     value2 = entry_2.get()
     # print("Current value of entry_2:", value2)
-
 
     if(value == value2):
         value3 = entry_3.get()
@@ -53,7 +78,8 @@ def insert_signup():
         value4 = entry_4.get()
         print("Current value of entry_4:", value4)
         insert_data(value4, value3, value2)
-
+        show_success_dialog("Account created successfully");
+        window.destroy()
 # # Define a function to set the value of entry_1
 # def set_entry_value():
 #     new_value = "New Value"

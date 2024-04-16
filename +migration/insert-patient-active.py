@@ -49,4 +49,5 @@ def insert_patient_data(pt, firstname, lastname):
             connection.close()
 
 # Example usage
-insert_patient_data("helloworldx", "john", "dee")
+# insert_patient_data("helloworldx", "john", "dee")
+insert_patient_data("helloworld", "john", "dee")

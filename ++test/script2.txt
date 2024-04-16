@@ -1,7 +1,0 @@
-# script2.py
-def main():
-    value_from_script1 = "value_passed_from_script1"  # Set a default value
-    print("Value from script1:", value_from_script1)
-
-if __name__ == "__main__":
-    main()

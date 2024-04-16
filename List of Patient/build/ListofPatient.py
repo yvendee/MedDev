@@ -48,6 +48,7 @@ def update_patient_data(new_pt, new_firstname, new_lastname, id_value):
         if connection.is_connected():
             cursor.close()
             connection.close()
+            
 def extract_ptname_ptlastname():
     pt_info = []  # List to store ptname and ptlastname
     try:
@@ -164,6 +165,7 @@ for row in extracted_data:
 
 from pathlib import Path
 import tkinter as tk
+from tkinter import Tk, Canvas, Entry, Text, Button, PhotoImage
 
 OUTPUT_PATH = Path(__file__).parent
 ASSETS_PATH = OUTPUT_PATH / "assets" / "frame0"
@@ -171,55 +173,166 @@ ASSETS_PATH = OUTPUT_PATH / "assets" / "frame0"
 def relative_to_assets(path: str) -> Path:
     return ASSETS_PATH / Path(path)
 
+##new
 def main():
     global mylist
+    # window = Tk()
     window = tk.Tk()
+
     window.geometry("900x600")
     window.geometry("+10+10")
-    window.configure(bg="#FFFFFF")
+    window.configure(bg = "#FFFFFF")
 
-    canvas = tk.Canvas(
+
+    canvas = Canvas(
         window,
-        bg="#FFFFFF",
-        height=600,
-        width=900,
-        bd=0,
-        highlightthickness=0,
-        relief="ridge"
+        bg = "#FFFFFF",
+        height = 600,
+        width = 900,
+        bd = 0,
+        highlightthickness = 0,
+        relief = "ridge"
     )
-    canvas.place(x=0, y=0)
 
-    image_image_1 = tk.PhotoImage(file=relative_to_assets("image_1.png"))
-    image_1 = canvas.create_image(450.0, 300.0, image=image_image_1)
+    canvas.place(x = 0, y = 0)
+    image_image_1 = PhotoImage(
+        file=relative_to_assets("image_1.png"))
+    image_1 = canvas.create_image(
+        450.0,
+        300.0,
+        image=image_image_1
+    )
 
-    button_image_1 = tk.PhotoImage(file=relative_to_assets("button_1.png"))
-    button_1 = tk.Button(
+    button_image_1 = PhotoImage(
+        file=relative_to_assets("button_1.png"))
+    button_1 = Button(
         image=button_image_1,
         borderwidth=0,
         highlightthickness=0,
-        command=lambda: [print("button_1 clicked"), window.destroy()],
+        command=lambda: [print("button_2 clicked"),window.destroy()], ##add
         relief="flat"
     )
-    button_1.place(x=677.0, y=131.0, width=139.25926208496094, height=37.03125)
+    button_1.place(
+        x=428.0,
+        y=115.0,
+        width=139.25926208496094,
+        height=37.0
+    )
 
-    button_image_2 = tk.PhotoImage(file=relative_to_assets("button_2.png"))
-    button_2 = tk.Button(
+    button_image_2 = PhotoImage(
+        file=relative_to_assets("button_2.png"))
+    button_2 = Button(
         image=button_image_2,
         borderwidth=0,
         highlightthickness=0,
-        command=lambda: [print("button_2 clicked"), window.destroy()],
+        command=lambda: [print("button_3 clicked"),window.destroy()],## back
+        # command=lambda: [print("button_3 clicked"),window.destroy()], ## back
         relief="flat"
     )
-    button_2.place(x=532.0, y=133.0, width=139.25926208496094, height=37.0)
+    button_2.place(
+        x=63.0,
+        y=120.0,
+        width=66.0,
+        height=37.0
+    )
+
+    button_image_3 = PhotoImage(
+        file=relative_to_assets("button_3.png"))
+    button_3 = Button(
+        image=button_image_3,
+        borderwidth=0,
+        highlightthickness=0,
+        command=lambda: [print("button_1 clicked"), window.destroy()], #search
+        # command=lambda: [print("button_2 clicked"), window.destroy()],
+        relief="flat"
+    )
+    button_3.place(
+        x=790.0,
+        y=115.0,
+        width=46.0,
+        height=37.0
+    )
+
+    entry_image_1 = PhotoImage(
+        file=relative_to_assets("entry_1.png"))
+    entry_bg_1 = canvas.create_image(
+        691.0,
+        133.0,
+        image=entry_image_1
+    )
+    entry_1 = Entry(
+        bd=0,
+        bg="#9CE9E4",
+        fg="#000716",
+        highlightthickness=0
+    )
+    entry_1.place(
+        x=592.0,
+        y=121.0,
+        width=198.0,
+        height=22.0
+    )
 
     # Inserting Table
     table = Table(window, width=680)
     table.place(x=100, y=200)
 
     window.bind("<Configure>", lambda e: table.resize())
-
     window.resizable(False, False)
     window.mainloop()
+
+
+# def main():
+#     global mylist
+#     window = tk.Tk()
+#     window.geometry("900x600")
+#     window.geometry("+10+10")
+#     window.configure(bg="#FFFFFF")
+
+#     canvas = tk.Canvas(
+#         window,
+#         bg="#FFFFFF",
+#         height=600,
+#         width=900,
+#         bd=0,
+#         highlightthickness=0,
+#         relief="ridge"
+#     )
+#     canvas.place(x=0, y=0)
+
+#     image_image_1 = tk.PhotoImage(file=relative_to_assets("image_1.png"))
+#     image_1 = canvas.create_image(450.0, 300.0, image=image_image_1)
+
+#     button_image_1 = tk.PhotoImage(file=relative_to_assets("button_1.png"))
+#     button_1 = tk.Button(
+#         image=button_image_1,
+#         borderwidth=0,
+#         highlightthickness=0,
+#         # command=lambda: [print("button_1 clicked"), window.destroy()],
+#         command=lambda: [print("button_1 clicked")],
+#         relief="flat"
+#     )
+#     button_1.place(x=677.0, y=131.0, width=139.25926208496094, height=37.03125)
+
+#     button_image_2 = tk.PhotoImage(file=relative_to_assets("button_2.png"))
+#     button_2 = tk.Button(
+#         image=button_image_2,
+#         borderwidth=0,
+#         highlightthickness=0,
+#         # command=lambda: [print("button_2 clicked"), window.destroy()],
+#         command=lambda: [print("button_2 clicked")],
+#         relief="flat"
+#     )
+#     button_2.place(x=532.0, y=133.0, width=139.25926208496094, height=37.0)
+
+#     # Inserting Table
+#     table = Table(window, width=680)
+#     table.place(x=100, y=200)
+
+#     window.bind("<Configure>", lambda e: table.resize())
+
+#     window.resizable(False, False)
+#     window.mainloop()
 
 class Table(tk.Frame):
     def __init__(self, master=None, height=400, **kwargs):
@@ -245,7 +358,7 @@ class Table(tk.Frame):
         # print("Last Name:", last_name)
 
         ptname_ptlastname = extract_ptname_ptlastname()
-        print(ptname_ptlastname)
+        # print(ptname_ptlastname)
         pt_value = ptname_ptlastname[0] + ptname_ptlastname[1]
         
         update_patient_data(pt_value, first_name, last_name, 1)

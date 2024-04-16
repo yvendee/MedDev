@@ -2,6 +2,36 @@
 
 import mysql.connector
 
+import tkinter as tk
+from tkinter import messagebox
+from tkcalendar import Calendar
+import datetime
+
+def show_calendar(root, event):
+    def on_date_selected():
+        selected_date = cal.get_date()
+        entry_3.delete(0, tk.END)  # Clear the current entry value
+        entry_3.insert(0, selected_date)  # Insert the selected date into the entry
+        window.destroy()  # Close the calendar window after date selection
+
+    # Create a new window
+    window = tk.Toplevel(root)
+    window.title("Calendar")
+
+    # Create a Calendar widget
+    cal = Calendar(window, selectmode='day', year=2024, month=4, day=14)
+    cal.pack(padx=20, pady=20)
+
+    # Create a button to select the date
+    select_btn = tk.Button(window, text="Select Date", command=on_date_selected)
+    select_btn.pack(pady=10)
+
+def show_error_dialog(msg):
+    messagebox.showerror("Error", msg)
+
+def show_success_dialog(msg):
+    messagebox.showinfo("Success", msg)
+
 
 def extract_ptname_ptlastname():
     pt_info = []  # List to store ptname and ptlastname
@@ -40,7 +70,7 @@ def extract_ptname_ptlastname():
                 pt_info = list(row)
 
     except mysql.connector.Error as error:
-        print("Error fetching data:", error)
+        show_error_dialog("Error fetching data")
 
     finally:
         # Closing the connection
@@ -51,11 +81,11 @@ def extract_ptname_ptlastname():
     return pt_info
 
 
-
-import mysql.connector
-
 def insert_patient_details(pt, firstname, lastname, age, startoftherapy):
     try:
+
+        status = "Inactive"
+        lastsession = "-"
         # Database connection parameters
         host = "localhost"
         user = "root"
@@ -86,29 +116,29 @@ def insert_patient_details(pt, firstname, lastname, age, startoftherapy):
 
         # If count is greater than 0, a record with the same first name and last name already exists
         if count > 0:
-            print("Duplicate entry for patient:", firstname, lastname)
+            # print("Duplicate entry for patient:", firstname, lastname)
+            show_error_dialog("Duplicate entry for patient!")
             return False
 
         # SQL query to insert new data into the "patient_details" table
         insert_query = """
-        INSERT INTO patient_details (pt, firstname, lastname, age, startoftherapy)
-        VALUES (%s, %s, %s, %s, %s)
+        INSERT INTO patient_details (pt, firstname, lastname, age, startoftherapy, status, lastsession)
+        VALUES (%s, %s, %s, %s, %s, %s, %s)
         """
 
         # Data to be inserted
-        data = (pt, firstname, lastname, age, startoftherapy)
+        data = (pt, firstname, lastname, age, startoftherapy, status, lastsession)
 
         # Executing the SQL query with data as parameters
         cursor.execute(insert_query, data)
 
         # Committing the changes
         connection.commit()
-
-        print("Data inserted successfully!")
+        show_success_dialog("Data inserted successfully!")
         return True
 
     except mysql.connector.Error as error:
-        print("Error inserting data:", error)
+        show_error_dialog("Error inserting data!")
         return False
 
     finally:
@@ -135,6 +165,9 @@ def test():
     print(ptname_ptlastname)
 
     pt = ptname_ptlastname[0] + ptname_ptlastname[1]
+
+
+    value3 = "/".join(reversed(value3.split("/")))
 
     insert_successful = insert_patient_details(pt, value2, value, value4, value3)
     # if insert_successful:
@@ -251,6 +284,8 @@ entry_3.place(
     width=337.0,
     height=30.0
 )
+
+entry_3.bind("<Button-1>", lambda event: show_calendar(window, event))
 
 entry_image_4 = PhotoImage(
     file=relative_to_assets("entry_4.png"))
