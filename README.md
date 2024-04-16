@@ -10,13 +10,13 @@ https://www.apachefriends.org/download.html
 ```
 ## 3.) import and run the mysql server:
 
-## 3.) locate working dir:
+## 4.) locate working dir:
 
 ```
 cd /grip-despro
 ```
 
-## 4.) Run the app
+## 5.) Run the app
 ```
 python main.py
 ```
