@@ -1,12 +1,130 @@
+import sys
+import os
+from time import sleep
+import serial
+
+
+from tkinter import messagebox
+
+def show_error_dialog(msg):
+    messagebox.showerror("Error", msg)
+
+def show_success_dialog(msg):
+    messagebox.showinfo("Success", msg)
+
+
+
+
+def get_csvlist(__fullpath):
+    try:
+        with open(__fullpath, "r+", encoding='UTF-8') as __f:
+            __list = list(__f)
+            __f.close()
+            __converted_list = []
+            __item_count = 0
+            for __i in __list:
+                __converted_list.append(__i.strip())
+                __item_count += 1
+            #print('total lines: ' + str(__item_count))
+            return __converted_list
+    except Exception as e:
+        print(e)
+        return []
+
+def Init_Genie(__port, __baudrate):
+    global ser1
+    try:
+    #initializing hardware serial of arduino
+        ser1 = serial.Serial(port = __port, baudrate = __baudrate,timeout = 0, writeTimeout=0)
+        # print("[+] INFO Connected: " + __port + " at " + __baudrate + "bps")
+        return True
+    except Exception as e:
+        print(e)
+        print("[+] ERROR Comport failed!")
+        return False
+
+def genie_SendString(string):
+    bytes_object = bytes(string, 'utf-8')
+    ser1.write(bytes_object)
+
+
+
+def Genie(__debug):
+
+    line = []
+
+    while True:
+
+        genie_SendString("1")
+
+        ## serial routines
+        numchar = ser1.inWaiting()
+        sleep(0.1)
+
+        if numchar > 0:
+            for x in range(numchar):
+                data = ser1.read()
+                # line[x] = (hex(ord(data))[2:])
+                # line.append(hex(ord(data))[2:]) ## print as hex string
+                # line.append(ord(data))          ## print as dec string
+                line.append(chr(ord(data)))       ## print as char string
+            if(__debug):
+                # print(line)
+                # Join the list elements into a single string
+                rtn = ''.join(line)
+                # Strip any trailing whitespace characters
+                rtn = rtn.strip()
+
+                # print(line)
+                line = []
+                return rtn
+
+
+
+
+
+
+# print("Welcome!")
+__listlist = []
+__list = get_csvlist("config.txt")
+for __i in range(0, len(__list)):
+    __split = __list[__i].split("=")
+    __listlist.append(__split)
+
+__comport = ""
+__baudrate = ""
+
+__scount = 0
+for __i in range(0, len(__listlist)):
+    if(__listlist[__i][0] == "comport"):
+        __comport = __listlist[__i][1]
+        __scount += 1
+    if(__listlist[__i][0] == "baudrate"):
+        __baudrate = __listlist[__i][1]
+        __scount += 1
+
+if(__scount == 2):
+    # print("[+] INFO config.txt loaded")
+    pass
+else:
+    show_error_dialog("[+] ERROR config.txt")
+    sys.exit()
+
+
+if(Init_Genie(__comport, __baudrate)):
+    pass
+
+else:
+    show_error_dialog("Can't connect to com port")
+    sys.exit()
 
 import mysql.connector
 
-from tkinter import messagebox
+
 
 import datetime
 
 import re
-
 
 
 def get_latest_session_details(pt, firstname, lastname):
@@ -422,20 +540,14 @@ def update_last_session(pt, firstname, lastname, lastsession):
         if 'connection' in locals() and connection.is_connected():
             connection.close()
 
-def show_error_dialog(msg):
-    messagebox.showerror("Error", msg)
-
-def show_success_dialog(msg):
-    messagebox.showinfo("Success", msg)
-
 
 mode = "left"
 
-# leftlist =  ["0","0","0","0","0"]
-# rightlist = ["0","0","0","0","0"]
+leftlist =  ["0","0","0","0","0"]
+rightlist = ["0","0","0","0","0"]
 
-leftlist =  ["1","2","3","4","5"]
-rightlist = ["6","7","8","9","10"]
+# leftlist =  ["1","2","3","4","5"]
+# rightlist = ["6","7","8","9","10"]
 
 # leftlist =  ["10","20","30","40","50"]
 # rightlist = ["60","70","80","90","10"]
@@ -446,28 +558,48 @@ def sendmsg(cmd_str):
     if(mode == "left"):
 
         if(cmd_str == "thumbPress"):
-            leftlist[0] = "100"
+            x = Genie(True)
+            show_success_dialog("GET:" + x)
+            leftlist[0] = x 
         if(cmd_str == "pointerPress"):
-            leftlist[1] = "100"
+            x = Genie(True)
+            show_success_dialog("GET:" + x)
+            leftlist[1] = x 
         if(cmd_str == "middlePress"):
-            leftlist[2] = "100"
+            x = Genie(True)
+            show_success_dialog("GET:" + x)
+            leftlist[2] = x 
         if(cmd_str == "ringPress"):
-            leftlist[3] = "100"
+            x = Genie(True)
+            show_success_dialog("GET:" + x)
+            leftlist[3] = x 
         if(cmd_str == "pinkyPress"):
-            leftlist[4] = "100"
+            x = Genie(True)
+            show_success_dialog("GET:" + x)
+            leftlist[4] = x 
 
     if(mode == "right"):
 
         if(cmd_str == "thumbPress"):
-            rightlist[0] = "100"
+            x = Genie(True)
+            show_success_dialog("GET:" + x)
+            rightlist[0] = x 
         if(cmd_str == "pointerPress"):
-            rightlist[1] = "100"
+            x = Genie(True)
+            show_success_dialog("GET:" + x)           
+            rightlist[1] = x 
         if(cmd_str == "middlePress"):
-            rightlist[2] = "100"
-        if(cmd_str == "ringPress"):
-            rightlist[3] = "100"
-        if(cmd_str == "pinkyPress"):
-            rightlist[4] = "100"
+            x = Genie(True)
+            show_success_dialog("GET:" + x)  
+            rightlist[2] = x 
+        if(cmd_str == "ringPress"):            
+            x = Genie(True)
+            show_success_dialog("GET:" + x)  
+            rightlist[3] = x 
+        if(cmd_str == "pinkyPress"):            
+            x = Genie(True)
+            show_success_dialog("GET:" + x)  
+            rightlist[4] = x 
 
     # print(cmd_str)
     # print("left:",leftlist)
@@ -483,7 +615,9 @@ def backtomenu():
 
 
 def confirm():
-    global mode
+    global mode, leftlist, rightlist
+
+    
 
     # Get the current date
     current_date = datetime.datetime.now().strftime("%Y-%m-%d")
@@ -493,11 +627,20 @@ def confirm():
 
     uppercase_string = mode[0].upper() + mode[1:]
 
-    f1 = "10"
-    f2 = "20"
-    f3 = "30"
-    f4 = "40"
-    f5 = "50"
+    if(mode == "right"):
+        f1 = rightlist[0]
+        f2 = rightlist[0]
+        f3 = rightlist[0]
+        f4 = rightlist[0]
+        f5 = rightlist[0]
+
+    else:
+
+        f1 = leftlist[0]
+        f2 = leftlist[0]
+        f3 = leftlist[0]
+        f4 = leftlist[0]
+        f5 = leftlist[0]
 
     # Insert data into the "archive_session" table
     # insert_archive_session_data(pt, firstname, lastname, date, hand, f1, f2, f3, f4, f5)

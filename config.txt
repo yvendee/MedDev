@@ -1,0 +1,2 @@
+comport=COM4
+baudrate=9600
