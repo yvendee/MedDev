@@ -21,7 +21,7 @@ cd /grip-despro
 python main.py
 ```
 
-# You can you this sample account:
+# You can use this sample account:
 
 firstname:
 ```
