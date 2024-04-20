@@ -150,6 +150,58 @@ def extract_data(pt_value):
             connection.close()
 
 
+def extract_data2(pt_value, firstname):
+    try:
+        # Database connection parameters
+        host = "localhost"
+        user = "root"
+        password = ""
+        database = "gripdespro"
+
+        # Establishing the connection to MySQL
+        connection = mysql.connector.connect(
+            host=host,
+            user=user,
+            password=password,
+            database=database
+        )
+
+        if not connection.is_connected():
+            print("Connection failed")
+            return
+
+        # Creating a cursor object using the cursor() method
+        cursor = connection.cursor()
+
+        # SQL query to fetch required columns from the table based on the 'pt' value and 'firstname'
+        select_query = """
+        SELECT firstname, lastname, lastsession, status 
+        FROM patient_details 
+        WHERE pt = %s AND firstname = %s
+        """
+
+        # Executing the SQL query with the specified 'pt' value and 'firstname'
+        cursor.execute(select_query, (pt_value, firstname))
+
+        # Fetching all rows from the result set
+        rows = cursor.fetchall()
+
+        # Formatting the data into the desired output format
+        output_data = [[row[0], row[1], row[2] if row[2] else "", row[3] if row[3] else ""] for row in rows]
+
+        return output_data
+
+    except mysql.connector.Error as error:
+        print("Error extracting data:", error)
+
+    finally:
+        # Closing the cursor
+        if 'cursor' in locals() and cursor is not None:
+            cursor.close()
+        # Closing the connection
+        if 'connection' in locals() and connection.is_connected():
+            connection.close()
+
 ptname_ptlastname = extract_ptname_ptlastname()
 pt_value = ptname_ptlastname[0] + ptname_ptlastname[1]
 
@@ -176,6 +228,8 @@ def relative_to_assets(path: str) -> Path:
 ##new
 def main():
     global mylist
+    global entry_1
+    global table
     # window = Tk()
     window = tk.Tk()
 
@@ -242,8 +296,9 @@ def main():
         image=button_image_3,
         borderwidth=0,
         highlightthickness=0,
-        command=lambda: [print("button_1 clicked"), window.destroy()], #search
+        # command=lambda: [print("button_1 clicked"), window.destroy()], #search
         # command=lambda: [print("button_2 clicked"), window.destroy()],
+        command=lambda: [search()], #search
         relief="flat"
     )
     button_3.place(
@@ -346,7 +401,7 @@ class Table(tk.Frame):
         self.height = height
         self.fixed_width = kwargs.get('width', 1000)  # Fixed width parameter
 
-        self.create_table()
+        self.create_table(mylist)
 
     def on_row_click(self, event):
      
@@ -365,9 +420,9 @@ class Table(tk.Frame):
 
         self.master.destroy()
 
-    def create_table(self):
+    def create_table(self, data):
         headers = ['Firstname', 'Lastname', 'Last Session', 'Status']
-        self.data = mylist
+        self.data = data
         # self.data = [
         #     ['John', 'Doe', 'Session 1', 'Active'],
         #     ['Jane', 'Smith', 'Session 2', 'Inactive'],
@@ -406,6 +461,14 @@ class Table(tk.Frame):
         self.canvas.pack(side="left", fill="both", expand=True)
         self.scrollbar.pack(side="right", fill="y")
 
+    def update_data(self, new_data):
+        self.data = new_data
+        # Clear current table display
+        for widget in self.scrollable_frame.winfo_children():
+            widget.destroy()
+        # Recreate the table with updated data
+        self.create_table(new_data)
+
     def resize(self):
         self.canvas.configure(width=self.fixed_width)  # Set canvas width to fixed width
 
@@ -414,6 +477,22 @@ class Table(tk.Frame):
         # self.canvas.configure(width=self.height)  # Set canvas width to fixed width
         self.scrollable_frame.update_idletasks()  # Update frame
         self.canvas.configure(scrollregion=self.canvas.bbox("all"))  # Update scroll region
+
+
+def search():
+    entry_value = entry_1.get()
+    # Set initial text for entry_1
+    entry_1.delete(0, "end")  # Clear the contents of entry_1
+
+    ptname_ptlastname = extract_ptname_ptlastname()
+    pt_value = ptname_ptlastname[0] + ptname_ptlastname[1]
+
+    # Extract the required data
+    extracted_data = extract_data2(pt_value,entry_value)
+    # print(extracted_data)
+
+    # Update the table with new data
+    table.update_data(extracted_data)
 
 if __name__ == "__main__":
     main()

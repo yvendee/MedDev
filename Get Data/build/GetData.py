@@ -2,6 +2,12 @@ import sys
 import os
 from time import sleep
 import serial
+import ast
+
+import matplotlib.pyplot as plt
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+from matplotlib.figure import Figure
+
 
 
 from tkinter import messagebox
@@ -49,37 +55,30 @@ def genie_SendString(string):
 
 
 
-def Genie(__debug):
+def Genie():
 
     line = []
-
+    genie_SendString("1")
+    rtn = ""
     while True:
-
-        genie_SendString("1")
-
-        ## serial routines
-        numchar = ser1.inWaiting()
-        sleep(0.1)
-
-        if numchar > 0:
-            for x in range(numchar):
-                data = ser1.read()
-                # line[x] = (hex(ord(data))[2:])
-                # line.append(hex(ord(data))[2:]) ## print as hex string
-                # line.append(ord(data))          ## print as dec string
-                line.append(chr(ord(data)))       ## print as char string
-            if(__debug):
-                # print(line)
-                # Join the list elements into a single string
-                rtn = ''.join(line)
-                # Strip any trailing whitespace characters
-                rtn = rtn.strip()
-
-                # print(line)
-                line = []
-                return rtn
-
-
+        
+        # Read a line from serial
+        data = ser1.readline()
+        
+        # Append the line to the list
+        # line.append(data.decode().strip())
+        
+        sleep(1)
+        # print("wait")
+        drtn = data.decode().strip()
+        if(drtn == ""):
+            pass
+        else:
+            # print(rtn)
+            # print(len(rtn))
+            rtn = drtn
+            break
+    return rtn
 
 
 
@@ -215,7 +214,7 @@ def insert_mockup_data(pt, firstname, lastname, session_number, l1, l2, l3, l4, 
         # Committing the changes to the database
         connection.commit()
 
-        print("Mockup data inserted successfully!")
+        # print("Mockup data inserted successfully!")
 
     except mysql.connector.Error as error:
         print("Error inserting mockup data:", error)
@@ -541,6 +540,28 @@ def update_last_session(pt, firstname, lastname, lastsession):
             connection.close()
 
 
+# Sample data for plotting
+x_data = [1, 2, 3, 4, 5]
+y_data = [0, 0, 0, 0, 0]
+
+# Define a function to plot the graph
+def plot_graph():
+    global x_data, y_data
+
+    # Create a figure and plot the graph
+    fig = Figure(figsize=(4, 3), dpi=100)
+    plot = fig.add_subplot(111)
+    plot.plot(x_data, y_data)
+    # plot.set_xlabel('X Label')
+    # plot.set_ylabel('Y Label')
+    plot.set_title('Flex Sensor Data')
+
+    # Embed the graph into the Tkinter window
+    canvas = FigureCanvasTkAgg(fig, master=window)
+    canvas.draw()
+    canvas.get_tk_widget().place(x=450, y=137)  # Adjust the position as needed
+
+
 mode = "left"
 
 leftlist =  ["0","0","0","0","0"]
@@ -553,71 +574,58 @@ rightlist = ["0","0","0","0","0"]
 # rightlist = ["60","70","80","90","10"]
 
 def sendmsg(cmd_str):
-    global mode, rightlist, leftlist
+    global mode, rightlist, leftlist, y_data
 
-    if(mode == "left"):
+    x = Genie()
 
-        if(cmd_str == "thumbPress"):
-            x = Genie(True)
-            show_success_dialog("GET:" + x)
-            leftlist[0] = x 
-        if(cmd_str == "pointerPress"):
-            x = Genie(True)
-            show_success_dialog("GET:" + x)
-            leftlist[1] = x 
-        if(cmd_str == "middlePress"):
-            x = Genie(True)
-            show_success_dialog("GET:" + x)
-            leftlist[2] = x 
-        if(cmd_str == "ringPress"):
-            x = Genie(True)
-            show_success_dialog("GET:" + x)
-            leftlist[3] = x 
-        if(cmd_str == "pinkyPress"):
-            x = Genie(True)
-            show_success_dialog("GET:" + x)
-            leftlist[4] = x 
+    try:
+        # Attempt to convert the received string to a list
+        converted_list = ast.literal_eval(x)
 
-    if(mode == "right"):
+        # Initialize an empty list to store the processed integers
+        processed_items = []
 
-        if(cmd_str == "thumbPress"):
-            x = Genie(True)
-            show_success_dialog("GET:" + x)
-            rightlist[0] = x 
-        if(cmd_str == "pointerPress"):
-            x = Genie(True)
-            show_success_dialog("GET:" + x)           
-            rightlist[1] = x 
-        if(cmd_str == "middlePress"):
-            x = Genie(True)
-            show_success_dialog("GET:" + x)  
-            rightlist[2] = x 
-        if(cmd_str == "ringPress"):            
-            x = Genie(True)
-            show_success_dialog("GET:" + x)  
-            rightlist[3] = x 
-        if(cmd_str == "pinkyPress"):            
-            x = Genie(True)
-            show_success_dialog("GET:" + x)  
-            rightlist[4] = x 
+        # Convert each item to int, taking absolute value to ensure positivity
+        for item in converted_list:
+            item = item.strip()
+            processed_items.append(abs(int(item.strip())))
 
-    # print(cmd_str)
-    # print("left:",leftlist)
-    # print("right",rightlist)
+        # Print the converted list for debugging
+        # print(processed_items)
+        # print(type(processed_items))
+
+
+        y_data = processed_items
+        plot_graph()
+
+        # Depending on the mode, assign the converted list to the appropriate variable
+        if mode == "left":
+            leftlist = processed_items
+        elif mode == "right":
+            rightlist = processed_items
+
+        # Show success dialog
+        show_success_dialog("Success: " + str(processed_items))
+
+        # Optionally, plot the graph here
+
+    except Exception as e:
+        # If an exception occurs during conversion or assignment, show error dialog
+        show_error_dialog("Improper format from serial: " + str(e))
+
 
 
 def backtomenu():
+    # update_data()
 
     window.destroy()
 
 
 
 
-
 def confirm():
-    global mode, leftlist, rightlist
 
-    
+    global mode, leftlist, rightlist
 
     # Get the current date
     current_date = datetime.datetime.now().strftime("%Y-%m-%d")
@@ -644,6 +652,7 @@ def confirm():
 
     # Insert data into the "archive_session" table
     # insert_archive_session_data(pt, firstname, lastname, date, hand, f1, f2, f3, f4, f5)
+    
     insert_archive_session_data(data[0], data[1], data[2], current_date, uppercase_string, f1, f2, f3, f4, f5)
 
 
@@ -653,6 +662,7 @@ def confirm():
     update_status(data[0], data[1], data[2], "Active")
 
     scount = count_entries(edata[0], edata[1], edata[2])
+    # print(scount)
 
 
     update_totalsession(data[0], data[1], data[2], scount)
@@ -1189,5 +1199,7 @@ canvas.create_text(
     fill="#FFFFFF",
     font=("Inter Bold", 15 * -1)
 )
+
+plot_graph()
 window.resizable(False, False)
 window.mainloop()
