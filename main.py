@@ -39,6 +39,9 @@ def main():
                     break  # Exit loop
 
         if(mode == 1):
+
+            if rtn_str == "exit":
+                sys.exit()
  
             if rtn_str == "button_2 clicked":
 
@@ -131,6 +134,9 @@ def main():
 
 
         if(mode == 3):
+
+            if(rtn_str == "exit"):
+                sys.exit()
 
             if rtn_str == "button_2 clicked":
                 ListofPatient_process.terminate()
@@ -405,9 +411,8 @@ def main():
                         mode = 6
                         break  # Exit loop
 
-            if rtn_str == "button_1 clicked": ## when click search button in the View Archive Session
-                rtn_str = "Clicked row"
-                mode = 3
+            if rtn_str == "exit": ## when click search button in the View Archive Session
+                sys.exit()
 
 
 

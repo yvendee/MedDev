@@ -160,6 +160,10 @@ def relative_to_assets(path: str) -> Path:
     return ASSETS_PATH / Path(path)
 
 
+def on_close():
+    print("exit")
+    window.destroy()
+
 window = Tk()
 
 window.geometry("600x600")
@@ -279,6 +283,7 @@ button_2.place(
     width=167.51266479492188,
     height=37.92269515991211
 )
+window.protocol("WM_DELETE_WINDOW", on_close)  # Handle window closing event
 window.resizable(False, False)
 window.mainloop()
 

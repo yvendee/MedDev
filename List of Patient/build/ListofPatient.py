@@ -230,6 +230,7 @@ def main():
     global mylist
     global entry_1
     global table
+    global window
     # window = Tk()
     window = tk.Tk()
 
@@ -333,6 +334,7 @@ def main():
     table.place(x=100, y=200)
 
     window.bind("<Configure>", lambda e: table.resize())
+    window.protocol("WM_DELETE_WINDOW", on_close)  # Handle window closing event
     window.resizable(False, False)
     window.mainloop()
 
@@ -493,6 +495,10 @@ def search():
 
     # Update the table with new data
     table.update_data(extracted_data)
+
+def on_close():
+    print("exit")
+    window.destroy()
 
 if __name__ == "__main__":
     main()
