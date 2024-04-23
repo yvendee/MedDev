@@ -566,6 +566,8 @@ mode = "left"
 
 leftlist =  ["0","0","0","0","0"]
 rightlist = ["0","0","0","0","0"]
+showlist = ["0","0","0","0","0"]
+
 
 # leftlist =  ["1","2","3","4","5"]
 # rightlist = ["6","7","8","9","10"]
@@ -603,6 +605,13 @@ def sendmsg(cmd_str):
             leftlist = processed_items
         elif mode == "right":
             rightlist = processed_items
+
+        # Later, when you want to update the text
+        canvas.itemconfig(text_object1, text=processed_items[0])
+        canvas.itemconfig(text_object2, text=processed_items[1])
+        canvas.itemconfig(text_object3, text=processed_items[2])
+        canvas.itemconfig(text_object4, text=processed_items[3])
+        canvas.itemconfig(text_object5, text=processed_items[4])
 
         # Show success dialog
         show_success_dialog("Success: " + str(processed_items))
@@ -1119,47 +1128,47 @@ button_9.place(
     height=36.0
 )
 
-canvas.create_text(
+text_object1 = canvas.create_text(
     372.0,
     184.0,
     anchor="nw",
-    text="0",
+    text=showlist[0], ##thumb
     fill="#000000",
     font=("Inter Bold", 10 * -1)
 )
 
-canvas.create_text(
+text_object5 = canvas.create_text(
     374.0,
     424.0,
     anchor="nw",
-    text="0",
+    text=showlist[4], ## pinky
     fill="#000000",
     font=("Inter Bold", 10 * -1)
 )
 
-canvas.create_text(
+text_object4 = canvas.create_text(
     374.0,
     364.0,
     anchor="nw",
-    text="0",
+    text=showlist[3],   ## ring
     fill="#000000",
     font=("Inter Bold", 10 * -1)
 )
 
-canvas.create_text(
+text_object3 = canvas.create_text(
     374.0,
     304.0,
     anchor="nw",
-    text="0",
+    text=showlist[2],   ## middle
     fill="#000000",
     font=("Inter Bold", 10 * -1)
 )
 
-canvas.create_text(
+text_object2 = canvas.create_text(
     374.0,
     244.0,
     anchor="nw",
-    text="0",
+    text=showlist[1],   ## pointer
     fill="#000000",
     font=("Inter Bold", 10 * -1)
 )
