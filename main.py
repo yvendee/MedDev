@@ -297,7 +297,9 @@ def main():
                     print("here")
                     if line.strip():  # If stdout is not empty
                         rtn_str = line.strip()
-                        mode = 1
+                        # mode = 1
+                        mode = 3
+                        rtn_str = "Clicked row"
                         break  # Exit loop
         
         if(mode == 6):
