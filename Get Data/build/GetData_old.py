@@ -600,48 +600,18 @@ def sendmsg(cmd_str):
         y_data = processed_items
         plot_graph()
 
-        max_number = max(map(int, processed_items))
-        # print(cmd_str)
-        # print(max_number)
-
-
         # Depending on the mode, assign the converted list to the appropriate variable
         if mode == "left":
-            if(cmd_str == "thumbPress"):
-                leftlist[0] = max_number;
-                canvas.itemconfig(text_object1, text=leftlist[0])
-            elif(cmd_str == "pointerPress"):
-                leftlist[1] = max_number;
-                canvas.itemconfig(text_object2, text=leftlist[1])
-            elif(cmd_str == "middlePress"):
-                leftlist[2] = max_number;
-                canvas.itemconfig(text_object3, text=leftlist[2])
-            elif(cmd_str == "ringPress"):
-                leftlist[3] = max_number;
-                canvas.itemconfig(text_object4, text=leftlist[3])
-            elif(cmd_str == "pinkyPress"):
-                leftlist[4] = max_number;
-                canvas.itemconfig(text_object5, text=leftlist[4])
-
-            # leftlist = processed_items
+            leftlist = processed_items
         elif mode == "right":
+            rightlist = processed_items
 
-            if(cmd_str == "thumbPress"):
-                rightlist[0] = max_number;
-                canvas.itemconfig(text_object1, text=rightlist[0])
-            elif(cmd_str == "pointerPress"):
-                rightlist[1] = max_number;
-                canvas.itemconfig(text_object2, text=rightlist[1])
-            elif(cmd_str == "middlePress"):
-                rightlist[2] = max_number;
-                canvas.itemconfig(text_object3, text=rightlist[2])
-            elif(cmd_str == "ringPress"):
-                rightlist[3] = max_number;
-                canvas.itemconfig(text_object4, text=rightlist[3])
-            elif(cmd_str == "pinkyPress"):
-                rightlist[4] = max_number;
-                canvas.itemconfig(text_object5, text=rightlist[4])
-            # rightlist = processed_items
+        # Later, when you want to update the text
+        canvas.itemconfig(text_object1, text=processed_items[0])
+        canvas.itemconfig(text_object2, text=processed_items[1])
+        canvas.itemconfig(text_object3, text=processed_items[2])
+        canvas.itemconfig(text_object4, text=processed_items[3])
+        canvas.itemconfig(text_object5, text=processed_items[4])
 
         # Show success dialog
         show_success_dialog("Success: " + str(processed_items))
