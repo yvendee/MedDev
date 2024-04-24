@@ -350,8 +350,10 @@ def main():
                             mode = 3
                             rtn_str = "Clicked row"
                         if rtn_str == "button_2 clicked":
-                            mode = 1
-                            rtn_str = "button_1 clicked"
+                            mode = 3
+                            rtn_str = "Clicked row"
+                            # mode = 1
+                            # rtn_str = "button_1 clicked"
 
                         break  # Exit loop
 
