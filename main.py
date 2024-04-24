@@ -294,6 +294,7 @@ def main():
                 rtn_str = ""
                 for line in ViewSession_process.stdout:                            
                     print("Stdout from ViewSession_process(gui).py:", line.strip())
+                    print("here")
                     if line.strip():  # If stdout is not empty
                         rtn_str = line.strip()
                         mode = 1
@@ -318,7 +319,8 @@ def main():
                     print("Stdout from ViewSession_process(gui).py:", line.strip())
                     if line.strip():  # If stdout is not empty
                         rtn_str = line.strip()
-                        mode = 1
+                        mode = 3
+                        rtn_str = "Clicked row"
                         break  # Exit loop
         
         if(mode == 6):
