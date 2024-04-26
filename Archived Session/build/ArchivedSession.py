@@ -315,6 +315,22 @@ def main():
         height=37.0
     )
 
+    button_image_2 = PhotoImage(
+        file=relative_to_assets("button_2.png"))
+    button_2 = Button(
+        image=button_image_2,
+        borderwidth=0,
+        highlightthickness=0,
+        command=lambda: [print("button_2 clicked"),window.destroy()],
+        relief="flat"
+    )
+    button_2.place(
+        x=488.0,
+        y=129.0,
+        width=66.0,
+        height=37.0
+    )
+
     entry_image_1 = PhotoImage(
         file=relative_to_assets("entry_1.png"))
     entry_bg_1 = canvas.create_image(

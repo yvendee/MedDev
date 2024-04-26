@@ -420,6 +420,21 @@ def main():
             if rtn_str == "exit": ## when click search button in the View Archive Session
                 sys.exit()
 
+        if(mode == 8):
+
+            if rtn_str == "button_2 clicked":
+                # print("get data")
+                if ArchivedSession_process.poll() is None:
+                    # If it's running, terminate it
+                    ArchivedSession_process.terminate()
+                    print("ArchivedSession_process terminated")
+                else:
+                    print("ArchivedSession_process is not running")
+                    
+                mode = 3
+                rtn_str = "Clicked row"
+
+
 
 
         if(mode == 9):

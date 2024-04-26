@@ -676,18 +676,18 @@ def confirm():
 
     if(mode == "right"):
         f1 = rightlist[0]
-        f2 = rightlist[0]
-        f3 = rightlist[0]
-        f4 = rightlist[0]
-        f5 = rightlist[0]
+        f2 = rightlist[1]
+        f3 = rightlist[2]
+        f4 = rightlist[3]
+        f5 = rightlist[4]
 
     else:
 
         f1 = leftlist[0]
-        f2 = leftlist[0]
-        f3 = leftlist[0]
-        f4 = leftlist[0]
-        f5 = leftlist[0]
+        f2 = leftlist[1]
+        f3 = leftlist[2]
+        f4 = leftlist[3]
+        f5 = leftlist[4]
 
     # Insert data into the "archive_session" table
     # insert_archive_session_data(pt, firstname, lastname, date, hand, f1, f2, f3, f4, f5)
@@ -747,6 +747,7 @@ def confirm():
 
             insert_mockup_data(data[0], data[1], data[2], session_str, leftlist[0], leftlist[1], leftlist[2], leftlist[3], leftlist[4], rightlist[0], rightlist[1], rightlist[2], rightlist[3], rightlist[4], current_date)
     
+
     # window.destroy()
 
 

@@ -2,6 +2,14 @@
 
 CREATE DATABASE gripdespro;
 
+USE gripdespro;
+
+source gripdespro_backup.sql;
+
 FLUSH PRIVILEGES;
 
 exit
+
+
+
+
