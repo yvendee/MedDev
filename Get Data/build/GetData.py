@@ -617,7 +617,7 @@ def sendmsg(cmd_str):
                     suggestTime = "20 minutes"
                 else:
                     suggestTime = "15 minutes"
-                canvas.itemconfig(text_object_suggestTime, suggestTime)
+                canvas.itemconfig(text_object_suggestTime, text=suggestTime)
             elif(cmd_str == "middlePress"):
                 leftlist[2] = max_number;
                 canvas.itemconfig(text_object3, text=leftlist[2])
@@ -641,7 +641,7 @@ def sendmsg(cmd_str):
                     suggestTime = "20 minutes"
                 else:
                     suggestTime = "15 minutes"
-                canvas.itemconfig(text_object_suggestTime, suggestTime)
+                canvas.itemconfig(text_object_suggestTime, text=suggestTime)
                 
             elif(cmd_str == "middlePress"):
                 rightlist[2] = max_number;
