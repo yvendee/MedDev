@@ -1240,6 +1240,16 @@ canvas.create_text(
     font=("Inter Bold", 15 * -1)
 )
 
+canvas.create_text(  ##suggested
+    485.0,
+    465.0,
+    anchor="nw",
+    text="15 minutes",
+    fill="#FFFFFF",
+    font=("Inter", 15 * -1)
+)
+
+
 plot_graph()
 window.resizable(False, False)
 window.mainloop()
