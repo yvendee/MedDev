@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.figure import Figure
 
-
+suggestTime = "15 minutes"
 
 from tkinter import messagebox
 
@@ -576,7 +576,7 @@ showlist = ["0","0","0","0","0"]
 # rightlist = ["60","70","80","90","10"]
 
 def sendmsg(cmd_str):
-    global mode, rightlist, leftlist, y_data
+    global mode, rightlist, leftlist, y_data, suggestTime
 
     x = Genie()
 
@@ -613,6 +613,11 @@ def sendmsg(cmd_str):
             elif(cmd_str == "pointerPress"):
                 leftlist[1] = max_number;
                 canvas.itemconfig(text_object2, text=leftlist[1])
+                if(int(max_number) >= 80):
+                    suggestTime = "20 minutes"
+                else:
+                    suggestTime = "15 minutes"
+                canvas.itemconfig(text_object_suggestTime, suggestTime)
             elif(cmd_str == "middlePress"):
                 leftlist[2] = max_number;
                 canvas.itemconfig(text_object3, text=leftlist[2])
@@ -632,6 +637,12 @@ def sendmsg(cmd_str):
             elif(cmd_str == "pointerPress"):
                 rightlist[1] = max_number;
                 canvas.itemconfig(text_object2, text=rightlist[1])
+                if(int(max_number) >= 80):
+                    suggestTime = "20 minutes"
+                else:
+                    suggestTime = "15 minutes"
+                canvas.itemconfig(text_object_suggestTime, suggestTime)
+                
             elif(cmd_str == "middlePress"):
                 rightlist[2] = max_number;
                 canvas.itemconfig(text_object3, text=rightlist[2])
@@ -1240,11 +1251,11 @@ canvas.create_text(
     font=("Inter Bold", 15 * -1)
 )
 
-canvas.create_text(  ##suggested
+text_object_suggestTime = canvas.create_text(  ##suggested
     485.0,
     465.0,
     anchor="nw",
-    text="15 minutes",
+    text=suggestTime,
     fill="#FFFFFF",
     font=("Inter", 15 * -1)
 )
