@@ -1,2 +1,2 @@
-comport=COM3
+comport=COM4
 baudrate=9600

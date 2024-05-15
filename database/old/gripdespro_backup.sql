@@ -34,9 +34,8 @@ CREATE TABLE `archive_session` (
   `f3` text DEFAULT NULL,
   `f4` text DEFAULT NULL,
   `f5` text DEFAULT NULL,
-  `remarks` text DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -45,7 +44,7 @@ CREATE TABLE `archive_session` (
 
 LOCK TABLES `archive_session` WRITE;
 /*!40000 ALTER TABLE `archive_session` DISABLE KEYS */;
-INSERT INTO `archive_session` VALUES (1,'helloworld','john','dee','2024-05-15','Left','1','0','0','0','2','Partial Movement');
+INSERT INTO `archive_session` VALUES (1,'helloworld','john','dee','2024-04-16','Left','10','20','30','40','50'),(2,'helloworld','john','dee','2024-04-16','Right','10','20','30','40','50'),(3,'helloworld','john','dee','2024-04-16','Left','10','20','30','40','50'),(4,'helloworld','john','dee','2024-04-16','Right','10','20','30','40','50'),(5,'helloworld','sarah','dee','2024-04-16','Left','10','20','30','40','50'),(6,'helloworld','sarah','dee','2024-04-16','Right','10','20','30','40','50'),(7,'helloworld','sarah','dee','2024-04-16','Left','10','20','30','40','50'),(8,'helloworld','sarah','dee','2024-04-16','Right','10','20','30','40','50'),(9,'helloworld','alice','stewart','2024-04-16','Left','10','20','30','40','50'),(10,'helloworld','john','dee','2024-04-16','Left','10','20','30','40','50'),(11,'helloworld','john','dee','2024-04-16','Right','10','20','30','40','50');
 /*!40000 ALTER TABLE `archive_session` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -154,7 +153,7 @@ CREATE TABLE `patient_details` (
 
 LOCK TABLES `patient_details` WRITE;
 /*!40000 ALTER TABLE `patient_details` DISABLE KEYS */;
-INSERT INTO `patient_details` VALUES (1,'helloworld','john','dee','30','24/17/4','1','2024-05-15','Active',NULL),(2,'helloworld','sarah','dee','20','24/9/4','4','2024-04-16','Active',NULL),(3,'helloworld','alice','stewart','30','24/9/4','1','2024-04-16','Active',NULL);
+INSERT INTO `patient_details` VALUES (1,'helloworld','john','dee','30','24/17/4','6','2024-04-16','Active',NULL),(2,'helloworld','sarah','dee','20','24/9/4','4','2024-04-16','Active',NULL),(3,'helloworld','alice','stewart','30','24/9/4','1','2024-04-16','Active',NULL);
 /*!40000 ALTER TABLE `patient_details` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -210,7 +209,7 @@ CREATE TABLE `session_details` (
   `r5` text DEFAULT NULL,
   `date` text DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -219,7 +218,7 @@ CREATE TABLE `session_details` (
 
 LOCK TABLES `session_details` WRITE;
 /*!40000 ALTER TABLE `session_details` DISABLE KEYS */;
-INSERT INTO `session_details` VALUES (1,'helloworld','john','dee','Session1','100','100','100','100','100','60','70','80','90','10','2024-04-16'),(2,'helloworld','john','dee','Session2','100','100','100','100','100','60','70','80','90','10','2024-04-16'),(3,'helloworld','john','dee','Session3','1','2','3','4','5','6','7','8','9','10','2024-04-16'),(4,'helloworld','john','dee','Session4','1','2','3','4','5','6','7','8','9','10','2024-04-16'),(5,'helloworld','sarah','dee','Session1','1','2','3','4','5','6','7','8','9','10','2024-04-16'),(6,'helloworld','sarah','dee','Session2','1','2','3','4','5','6','7','8','9','10','2024-04-16'),(7,'helloworld','sarah','dee','Session3','1','2','3','4','5','6','7','8','9','10','2024-04-16'),(8,'helloworld','sarah','dee','Session4','1','2','3','4','5','6','7','8','9','10','2024-04-16'),(9,'helloworld','alice','stewart','Session1','1','2','3','4','5','6','7','8','9','10','2024-04-16'),(10,'helloworld','john','dee','Session5','100','100','100','100','100','6','7','8','9','10','2024-04-16'),(11,'helloworld','john','dee','Session6','100','100','100','100','100','6','7','8','9','10','2024-04-16'),(12,'helloworld','john','dee','Session7','1','0','0','0','2','0','0','0','0','0','2024-05-15');
+INSERT INTO `session_details` VALUES (1,'helloworld','john','dee','Session1','100','100','100','100','100','60','70','80','90','10','2024-04-16'),(2,'helloworld','john','dee','Session2','100','100','100','100','100','60','70','80','90','10','2024-04-16'),(3,'helloworld','john','dee','Session3','1','2','3','4','5','6','7','8','9','10','2024-04-16'),(4,'helloworld','john','dee','Session4','1','2','3','4','5','6','7','8','9','10','2024-04-16'),(5,'helloworld','sarah','dee','Session1','1','2','3','4','5','6','7','8','9','10','2024-04-16'),(6,'helloworld','sarah','dee','Session2','1','2','3','4','5','6','7','8','9','10','2024-04-16'),(7,'helloworld','sarah','dee','Session3','1','2','3','4','5','6','7','8','9','10','2024-04-16'),(8,'helloworld','sarah','dee','Session4','1','2','3','4','5','6','7','8','9','10','2024-04-16'),(9,'helloworld','alice','stewart','Session1','1','2','3','4','5','6','7','8','9','10','2024-04-16'),(10,'helloworld','john','dee','Session5','100','100','100','100','100','6','7','8','9','10','2024-04-16'),(11,'helloworld','john','dee','Session6','100','100','100','100','100','6','7','8','9','10','2024-04-16');
 /*!40000 ALTER TABLE `session_details` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -232,4 +231,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-05-15 15:10:28
+-- Dump completed on 2024-04-16 14:56:23
