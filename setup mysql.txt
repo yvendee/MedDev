@@ -11,5 +11,10 @@ FLUSH PRIVILEGES;
 exit
 
 
+### export mysql database
+
+mysqldump -u root -p gripdespro > gripdespro_backup.sql
+
+
 
 

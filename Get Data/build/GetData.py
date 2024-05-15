@@ -9,8 +9,11 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.figure import Figure
 
 suggestTime = "15 minutes"
+selected_item = "No Movement"
 
+import tkinter as tk
 from tkinter import messagebox
+from tkinter import OptionMenu
 
 def show_error_dialog(msg):
     messagebox.showerror("Error", msg)
@@ -117,10 +120,8 @@ else:
     show_error_dialog("Can't connect to com port")
     sys.exit()
 
+
 import mysql.connector
-
-
-
 import datetime
 
 import re
@@ -227,7 +228,7 @@ def insert_mockup_data(pt, firstname, lastname, session_number, l1, l2, l3, l4, 
         if 'connection' in locals() and connection.is_connected():
             connection.close()
 
-def insert_archive_session_data(pt, firstname, lastname, date, hand, f1, f2, f3, f4, f5):
+def insert_archive_session_data(pt, firstname, lastname, date, hand, f1, f2, f3, f4, f5, remarks):
     try:
         # Database connection parameters
         host = "localhost"
@@ -252,12 +253,12 @@ def insert_archive_session_data(pt, firstname, lastname, date, hand, f1, f2, f3,
 
         # SQL query to insert data into the "archive_session" table
         insert_query = """
-        INSERT INTO archive_session (pt, firstname, lastname, date, hand, f1, f2, f3, f4, f5) 
-        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+        INSERT INTO archive_session (pt, firstname, lastname, date, hand, f1, f2, f3, f4, f5, remarks) 
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
         """
 
         # Data to be inserted
-        data = (pt, firstname, lastname, date, hand, f1, f2, f3, f4, f5)
+        data = (pt, firstname, lastname, date, hand, f1, f2, f3, f4, f5, remarks)
 
         # Executing the SQL query
         cursor.execute(insert_query, data)
@@ -675,7 +676,7 @@ def backtomenu():
 
 def confirm():
 
-    global mode, leftlist, rightlist
+    global mode, leftlist, rightlist, selected_item
 
     # Get the current date
     current_date = datetime.datetime.now().strftime("%Y-%m-%d")
@@ -703,7 +704,7 @@ def confirm():
     # Insert data into the "archive_session" table
     # insert_archive_session_data(pt, firstname, lastname, date, hand, f1, f2, f3, f4, f5)
     
-    insert_archive_session_data(data[0], data[1], data[2], current_date, uppercase_string, f1, f2, f3, f4, f5)
+    insert_archive_session_data(data[0], data[1], data[2], current_date, uppercase_string, f1, f2, f3, f4, f5, selected_item)
 
 
     # Update the "lastsession" column in the "patient_details" table
@@ -1148,7 +1149,7 @@ button_8 = Button(
     relief="flat"
 )
 button_8.place(
-    x=706.0,
+    x=719.0,
     y=519.0,
     width=146.0,
     height=36.0
@@ -1163,8 +1164,10 @@ button_9 = Button(
     command=lambda: [print("button_9 clicked"), backtomenu()], ## back to main menu
     relief="flat"
 )
+
+
 button_9.place(
-    x=535.0,
+    x=563.0,
     y=519.0,
     width=146.0,
     height=36.0
@@ -1252,8 +1255,8 @@ canvas.create_text(
 )
 
 text_object_suggestTime = canvas.create_text(  ##suggested
-    485.0,
-    465.0,
+    435.0,
+    528.0,
     anchor="nw",
     text=suggestTime,
     fill="#FFFFFF",
@@ -1262,5 +1265,24 @@ text_object_suggestTime = canvas.create_text(  ##suggested
 
 
 plot_graph()
+
+# Dropdown menu
+options = [ "No Movement", "Partial Movement", "Normal Movement"]
+selected_option = tk.StringVar()
+selected_option.set(options[0])
+
+# Callback function to print the selected option
+def print_selected_option(*args):
+    global selected_item
+    selected_item = selected_option.get()
+    # print("Selected option:", selected_option.get())
+
+# Attach the callback function to the variable
+selected_option.trace("w", print_selected_option)
+
+dropdown_menu = OptionMenu(window, selected_option, *options)
+dropdown_menu.config(bg="#FFFFFF", fg="#000716", highlightthickness=0, bd=0)
+dropdown_menu.place(x=456.0, y=466.0, width=150.0, height=20.0)
+
 window.resizable(False, False)
 window.mainloop()

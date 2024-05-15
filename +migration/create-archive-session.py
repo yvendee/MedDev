@@ -36,7 +36,8 @@ def create_archive_session_table():
             f2 TEXT,
             f3 TEXT,
             f4 TEXT,
-            f5 TEXT
+            f5 TEXT,
+            remarks TEXT
         )
         """
 

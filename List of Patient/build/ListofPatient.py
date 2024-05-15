@@ -453,13 +453,27 @@ class Table(tk.Frame):
             header_label = tk.Label(self.scrollable_frame, text=header, font=('Arial', 20, 'bold'))
             header_label.grid(row=0, column=col, padx=10, pady=5)
 
+        # # Create data rows
+        # for row, entry in enumerate(self.data, start=1):
+        #     for col, value in enumerate(entry):
+        #         data_label = tk.Label(self.scrollable_frame, text=value, font=('Arial', 20))
+        #         data_label.grid(row=row, column=col, padx=10, pady=5)
+        #         data_label.bind("<Button-1>", self.on_row_click)
+
+
         # Create data rows
         for row, entry in enumerate(self.data, start=1):
             for col, value in enumerate(entry):
-                data_label = tk.Label(self.scrollable_frame, text=value, font=('Arial', 20))
-                data_label.grid(row=row, column=col, padx=10, pady=5)
-                data_label.bind("<Button-1>", self.on_row_click)
-
+                if col == 0:  # Check if it's the 'Firstname' column
+                    data_label = tk.Label(self.scrollable_frame, text=value, font=('Arial', 20), fg="blue", cursor="hand2")
+                    # Add underline effect
+                    data_label.config(fg="blue", font=("Arial", 20, "underline"))
+                    data_label.grid(row=row, column=col, padx=10, pady=5)
+                    data_label.bind("<Button-1>", self.on_row_click)
+                else:
+                    data_label = tk.Label(self.scrollable_frame, text=value, font=('Arial', 20))
+                    data_label.grid(row=row, column=col, padx=10, pady=5)
+                    
         self.canvas.pack(side="left", fill="both", expand=True)
         self.scrollbar.pack(side="right", fill="y")
 
